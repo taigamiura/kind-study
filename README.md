@@ -20,8 +20,47 @@
 - SLO / Alert 設計
 - 障害初動とポストモーテム
 - リリース判断、共有、追跡監視、再リリース判定
+- RBAC と最小権限
+- ResourceQuota と共有クラスタ統制
+- PDB とメンテナンス時の安全性
+- affinity / topology spread による配置制御
+- logging / tracing による深掘り調査
+- Pod Security と admission 制御
+- クラスタ upgrade と保守運用
+- Storage snapshot と状態を持つ運用
+- 変更管理と緊急変更の扱い
+- Container と Linux の実務前提
+- Kubernetes control plane と内部構造
+- Authentication、SSO、Audit
+- Policy as Code と例外統制
+- Supply Chain Security、SBOM、署名検証
+- CRD と Operator の理解
+- Autoscaling、capacity planning、cost 最適化
+- External Secrets、KMS、Secret Manager 連携
+- Stateful HA、replication、managed DB 判断
+- Multi-cluster、環境分離、DR 設計
+- 性能試験、profiling、性能ボトルネック解析
+- Platform Team、SRE、運用当番設計
+- 変更要求から本番反映までの総合演習
+- 障害注入、初動、緩和、復旧の総合訓練
+- セキュリティレビューと是正計画
+- capacity / cost / scaling 審査
+- production readiness review
+- cluster 再構築と復旧訓練
+- 30 日運用計画と on-call 改善
+- 卒業試験としての総合審査
+- Managed Kubernetes とクラウド周辺設計
+- Terraform と基盤 IaC
+- Build pipeline と build engineering
+- OpenTelemetry と log pipeline 設計
+- Kubernetes 前提のアプリ実装規約
+- Node、runtime、eviction、OOM の深掘り
+- 監査、データ保護、コンプライアンス対応
+- 外部依存、egress、連携障害対応
+- Platform Engineering と self-service
+- 非機能要件と業種別本番要件
 
-学習順は [docs/handson.md](docs/handson.md) の handson1 から handson37 までで追えるように整理しています。用語で詰まりやすい人は [docs/glossary.md](docs/glossary.md) を辞書として併用してください。
+学習順は [docs/handson.md](docs/handson.md) の handson1 から handson76 までで追えるように整理しています。用語で詰まりやすい人は [docs/glossary.md](docs/glossary.md) を辞書として併用してください。
 
 ## まず結論
 

@@ -1,0 +1,8 @@
+apiVersion: example.com/v1alpha1
+kind: Widget
+metadata:
+  name: sample-widget
+  namespace: apps
+spec:
+  size: small
+  replicas: 2

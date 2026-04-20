@@ -20,7 +20,7 @@
 ## 先に読むと詰まりにくい資料
 
 - [glossary.md](glossary.md): このシリーズで頻出する Kubernetes 用語の先読み用ガイド
-- [glossary.md](glossary.md) は handson 本編の前後で何度も参照する辞書として使う
+- 分からない用語が出たら [glossary.md](glossary.md) に戻る
 
 ## 連番ハンズオン
 
@@ -61,6 +61,45 @@
 35. [handson35.md](handson35.md): SLO / Alert テンプレートの作り方を学ぶ
 36. [handson36.md](handson36.md): 障害初動チェックリストを実践する
 37. [handson37.md](handson37.md): Postmortem を書いて運用改善へつなげる
+38. [handson38.md](handson38.md): RBAC と ServiceAccount で最小権限を設計する
+39. [handson39.md](handson39.md): ResourceQuota と LimitRange で共有クラスタ運用を学ぶ
+40. [handson40.md](handson40.md): PodDisruptionBudget と node drain を学ぶ
+41. [handson41.md](handson41.md): affinity、anti-affinity、topology spread で配置設計を学ぶ
+42. [handson42.md](handson42.md): logging と tracing の実務的な使い分けを学ぶ
+43. [handson43.md](handson43.md): Pod Security、securityContext、admission の基礎を学ぶ
+44. [handson44.md](handson44.md): クラスタ upgrade とメンテナンス運用を学ぶ
+45. [handson45.md](handson45.md): StorageClass、VolumeSnapshot、状態を持つ運用の深掘りを学ぶ
+46. [handson46.md](handson46.md): 変更管理、緊急変更、運用統制を学ぶ
+47. [handson47.md](handson47.md): Container と Linux の基礎を Kubernetes 文脈で学ぶ
+48. [handson48.md](handson48.md): Kubernetes 内部構造と control plane の役割を学ぶ
+49. [handson49.md](handson49.md): Authentication、SSO、Audit の実務を学ぶ
+50. [handson50.md](handson50.md): Policy as Code と例外統制を学ぶ
+51. [handson51.md](handson51.md): Supply Chain Security と image 信頼性を学ぶ
+52. [handson52.md](handson52.md): CRD と Operator の仕組みを学ぶ
+53. [handson53.md](handson53.md): Autoscaling、capacity planning、cost の考え方を学ぶ
+54. [handson54.md](handson54.md): External Secrets と KMS を前提にした Secret 運用を学ぶ
+55. [handson55.md](handson55.md): Stateful HA、replication、DB 運用判断を学ぶ
+56. [handson56.md](handson56.md): Multi-cluster、environment 分離、DR 設計を学ぶ
+57. [handson57.md](handson57.md): 性能試験、profiling、性能劣化の詰め方を学ぶ
+58. [handson58.md](handson58.md): Platform Team、SRE、運用当番の実務を学ぶ
+59. [handson59.md](handson59.md): 変更要求の受付から本番反映までを通しで実践する
+60. [handson60.md](handson60.md): 障害注入から初動、緩和、復旧、ふりかえりまでを通しで実践する
+61. [handson61.md](handson61.md): セキュリティレビューと是正計画を実践する
+62. [handson62.md](handson62.md): capacity、cost、scaling のレビューを実践する
+63. [handson63.md](handson63.md): production readiness review を実践する
+64. [handson64.md](handson64.md): cluster 再構築と復旧訓練を実践する
+65. [handson65.md](handson65.md): 30 日運用計画と on-call 改善を実践する
+66. [handson66.md](handson66.md): 卒業試験として総合審査と弱点つぶしを行う
+67. [handson67.md](handson67.md): Managed Kubernetes とクラウド周辺設計を学ぶ
+68. [handson68.md](handson68.md): Terraform と基盤 IaC を学ぶ
+69. [handson69.md](handson69.md): Build pipeline と container build engineering を学ぶ
+70. [handson70.md](handson70.md): OpenTelemetry と log pipeline の実装設計を学ぶ
+71. [handson71.md](handson71.md): Kubernetes 前提のアプリ実装規約を学ぶ
+72. [handson72.md](handson72.md): Node、runtime、eviction、OOM の深掘りを学ぶ
+73. [handson73.md](handson73.md): 監査、データ保護、コンプライアンス対応を学ぶ
+74. [handson74.md](handson74.md): 外部依存と egress 設計、連携障害対応を学ぶ
+75. [handson75.md](handson75.md): Platform Engineering と self-service 設計を学ぶ
+76. [handson76.md](handson76.md): 非機能要件と業種別本番要件の詰め方を学ぶ
 
 ## この分割にした理由
 
@@ -68,6 +107,13 @@
 - 途中で止めても再開しやすい
 - 実務に必要な論点を、順番に積み上げられる
 
-このシリーズは handson37 まで用意してあり、Helm、Kustomize、HPA、NetworkPolicy、CI/CD、HTTPS、サービスメッシュ、mTLS、カナリアリリース、切り戻し運用に加え、バックアップ / 復旧、Secret 更新、SLO / Alert、障害ふりかえり、再リリース判断まで順番に扱えます。
+このシリーズは handson76 まで用意してあり、Helm、Kustomize、HPA、NetworkPolicy、CI/CD、HTTPS、サービスメッシュ、mTLS、カナリアリリース、切り戻し運用に加え、バックアップ / 復旧、Secret 更新、SLO / Alert、障害ふりかえり、再リリース判断、RBAC、Quota、PDB、配置制御、logging / tracing、Pod Security、upgrade、storage 運用、変更管理、container / Linux 基礎、Kubernetes 内部構造、Authentication / Audit、Policy as Code、Supply Chain Security、CRD / Operator、autoscaling / cost、external secrets、stateful HA、multi-cluster / DR、性能改善、team 運用、総合変更運用、障害訓練、セキュリティ審査、capacity / cost 審査、本番審査、再構築訓練、30 日運用計画、卒業審査に加えて、managed Kubernetes、Terraform、build engineering、OpenTelemetry、Kubernetes 前提のアプリ実装、node 深掘り、監査 / データ保護、外部依存設計、platform engineering、非機能要件まで順番に扱えます。
+
+## このシリーズの使い切り方
+
+- 各 handson の完了条件を満たしたあとに、`まだ説明できないこと`, `まだ手順化できないこと`, `まだ自信なく戻せないこと` を 3 つ書く
+- その 3 つに対応する前の handson と補助資料へ戻り、確認し直す
+- handson59 以降は知識追加ではなく、`残課題がないかを自分で発見して埋める` 総合演習として使う
+- handson66 で弱点が出たら、弱かった章へ戻って再実施し、再度 handson66 で確認する
 
 用語が分からなくなったら、都度 [glossary.md](glossary.md) に戻って確認しながら進めてください。

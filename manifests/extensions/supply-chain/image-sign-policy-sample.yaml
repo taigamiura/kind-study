@@ -1,0 +1,19 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: verify-signed-images-sample
+spec:
+  validationFailureAction: Audit
+  rules:
+    - name: verify-user-service-image
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      verifyImages:
+        - imageReferences:
+            - "ghcr.io/*"
+          mutateDigest: false
+          required: false
+          verifyDigest: true
