@@ -17,6 +17,11 @@
 
 クラスタ設定は [kind-study.yaml](../kind-study.yaml) です。
 
+## 先に読むと詰まりにくい資料
+
+- [glossary.md](glossary.md): このシリーズで頻出する Kubernetes 用語の先読み用ガイド
+- [release-runbook.md](release-runbook.md): handson18 で使う canary 観測、切り戻し、昇格の実務向け runbook
+
 ## 連番ハンズオン
 
 1. [handson1.md](handson1.md): 何を作るのかと全体像を理解する
@@ -29,6 +34,14 @@
 8. [handson8.md](handson8.md): Ridgepole とスキーマ運用を学ぶ
 9. [handson9.md](handson9.md): Grafana と監視の基礎を学ぶ
 10. [handson10.md](handson10.md): Argo CD と GitOps、最後の障害訓練を行う
+11. [handson11.md](handson11.md): Helm でアドオンを安全に導入する
+12. [handson12.md](handson12.md): Kustomize で base と overlay を使い分ける
+13. [handson13.md](handson13.md): HPA で自動スケールを学ぶ
+14. [handson14.md](handson14.md): NetworkPolicy で通信制御を学ぶ
+15. [handson15.md](handson15.md): CI/CD で manifest 品質を継続検証する
+16. [handson16.md](handson16.md): HTTPS 化と TLS 証明書運用を学ぶ
+17. [handson17.md](handson17.md): Sidecar とサービスメッシュを学ぶ
+18. [handson18.md](handson18.md): mTLS の STRICT 化、カナリアリリース、切り戻しを学ぶ
 
 ## この分割にした理由
 
@@ -36,4 +49,6 @@
 - 途中で止めても再開しやすい
 - 実務に必要な論点を、順番に積み上げられる
 
-必要であれば次の段階で handson11 以降を追加し、Helm、Kustomize、HPA、NetworkPolicy、CI/CD に拡張できます。
+このシリーズは handson18 まで用意してあり、Helm、Kustomize、HPA、NetworkPolicy、CI/CD、HTTPS、サービスメッシュ、mTLS、カナリアリリース、切り戻し運用まで拡張できます。
+
+用語が分からなくなったら、都度 [glossary.md](glossary.md) に戻って確認しながら進めてください。

@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: user-service
+  namespace: apps
+spec:
+  hosts:
+    - user-service
+    - user-service.apps.svc.cluster.local
+  http:
+    - retries:
+        attempts: 2
+        perTryTimeout: 2s
+      timeout: 5s
+      route:
+        - destination:
+            host: user-service.apps.svc.cluster.local
+            port:
+              number: 9898

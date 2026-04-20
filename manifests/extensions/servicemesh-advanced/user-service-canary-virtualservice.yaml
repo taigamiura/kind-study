@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: user-service-canary
+  namespace: apps
+spec:
+  hosts:
+    - user-service
+    - user-service.apps.svc.cluster.local
+  http:
+    - route:
+        - destination:
+            host: user-service.apps.svc.cluster.local
+            port:
+              number: 9898
+          weight: 90
+        - destination:
+            host: user-service-canary.apps.svc.cluster.local
+            port:
+              number: 9898
+          weight: 10

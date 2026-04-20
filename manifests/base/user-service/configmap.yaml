@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-service-config
+  namespace: apps
+data:
+  PODINFO_UI_MESSAGE: "user-service: user API is running"
+  PODINFO_LOG_LEVEL: info

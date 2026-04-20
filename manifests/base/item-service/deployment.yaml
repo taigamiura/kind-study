@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: item-service
+  namespace: apps
+  labels:
+    app.kubernetes.io/name: item-service
+    app.kubernetes.io/part-of: kind-study
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: item-service
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: item-service
+        app.kubernetes.io/part-of: kind-study
+    spec:
+      containers:
+        - name: item-service
+          image: ghcr.io/stefanprodan/podinfo:6.7.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 9898
+          envFrom:
+            - configMapRef:
+                name: item-service-config
+          env:
+            - name: PODINFO_COLOR
+              value: "#059669"
+            - name: PODINFO_PORT
+              value: "9898"
+            - name: POSTGRES_HOST
+              value: postgres.infra.svc.cluster.local
+            - name: POSTGRES_DB
+              value: app_db
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service-canary
+  namespace: apps
+  labels:
+    app.kubernetes.io/name: user-service-canary
+    app.kubernetes.io/part-of: kind-study
+spec:
+  selector:
+    app.kubernetes.io/name: user-service-canary
+  ports:
+    - name: http
+      port: 9898
+      targetPort: http

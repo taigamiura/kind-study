@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ridgepole-apply
+  namespace: infra
+  labels:
+    app.kubernetes.io/name: ridgepole
+    app.kubernetes.io/part-of: kind-study
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ridgepole
+        app.kubernetes.io/part-of: kind-study
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: ridgepole
+          image: ruby:3.3-alpine
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - |
+              apk add --no-cache build-base postgresql-dev tzdata && \
+              gem install ridgepole -v 2.0.1 --no-document && \
+              gem install pg --no-document && \
+              ridgepole --config /work/database.yml --env development --file /work/Schemafile --apply
+          envFrom:
+            - secretRef:
+                name: postgres-secret
+          volumeMounts:
+            - name: ridgepole-files
+              mountPath: /work
+      volumes:
+        - name: ridgepole-files
+          configMap:
+            name: ridgepole-files

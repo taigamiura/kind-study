@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ridgepole-files
+  namespace: infra
+data:
+  database.yml: |
+    development:
+      adapter: postgresql
+      encoding: unicode
+      host: postgres.infra.svc.cluster.local
+      port: 5432
+      database: <%= ENV.fetch("POSTGRES_DB") %>
+      username: <%= ENV.fetch("POSTGRES_USER") %>
+      password: <%= ENV.fetch("POSTGRES_PASSWORD") %>
+  Schemafile: |
+    create_table "items", force: :cascade do |t|
+      t.string "name", null: false
+      t.integer "price", null: false, default: 0
+      t.timestamps null: false
+    end
+
+    create_table "users", force: :cascade do |t|
+      t.string "name", null: false
+      t.string "email", null: false
+      t.timestamps null: false
+    end
+
+    add_index "users", ["email"], unique: true, name: "index_users_on_email"

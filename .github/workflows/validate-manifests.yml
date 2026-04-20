@@ -1,0 +1,43 @@
+name: validate-manifests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: v1.31.0
+
+      - name: Set up kustomize
+        uses: imranismail/setup-kustomize@v2
+        with:
+          kustomize-version: 5.4.3
+
+      - name: Install kubeconform
+        run: |
+          curl -L https://github.com/yannh/kubeconform/releases/download/v0.6.7/kubeconform-linux-amd64.tar.gz -o kubeconform.tar.gz
+          tar -xzf kubeconform.tar.gz
+          sudo mv kubeconform /usr/local/bin/kubeconform
+
+      - name: Render local overlay
+        run: kustomize build manifests/overlays/local > rendered.yaml
+
+      - name: Validate built manifests
+        run: kubeconform -summary -ignore-missing-schemas rendered.yaml
+
+      - name: Validate HPA manifests
+        run: kubeconform -summary -ignore-missing-schemas
+          manifests/extensions/hpa/*.yaml
+
+      - name: Validate NetworkPolicy manifests
+        run: kubeconform -summary manifests/extensions/networkpolicy/*.yaml

@@ -1,0 +1,19 @@
+grafana:
+  adminPassword: admin123
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    hosts:
+      - grafana.localtest.me
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorNamespaceSelector: {}
+    serviceMonitorSelector:
+      matchLabels:
+        release: kube-prometheus-stack
+
+alertmanager:
+  enabled: false

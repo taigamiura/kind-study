@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: kind-study
+  namespace: gitops
+spec:
+  description: kind-study applications managed by Argo CD
+  sourceRepos:
+    - https://github.com/your-org/kind-study.git
+  destinations:
+    - namespace: infra
+      server: https://kubernetes.default.svc
+    - namespace: apps
+      server: https://kubernetes.default.svc
+    - namespace: observability
+      server: https://kubernetes.default.svc
+    - namespace: gitops
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-exporter
+  namespace: observability
+  labels:
+    app.kubernetes.io/name: postgres-exporter
+    app.kubernetes.io/part-of: kind-study
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: postgres-exporter
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: postgres-exporter
+        app.kubernetes.io/part-of: kind-study
+    spec:
+      containers:
+        - name: postgres-exporter
+          image: quay.io/prometheuscommunity/postgres-exporter:v0.15.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: metrics
+              containerPort: 9187
+          env:
+            - name: DATA_SOURCE_URI
+              value: postgres.infra.svc.cluster.local:5432/app_db?sslmode=disable
+            - name: DATA_SOURCE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-exporter-secret
+                  key: DATA_SOURCE_USER
+            - name: DATA_SOURCE_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-exporter-secret
+                  key: DATA_SOURCE_PASS
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi

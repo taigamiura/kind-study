@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kind-study-observability
+  namespace: gitops
+spec:
+  project: kind-study
+  source:
+    repoURL: https://github.com/your-org/kind-study.git
+    targetRevision: main
+    path: manifests/overlays/local/observability
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: observability
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

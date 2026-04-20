@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kind-study-infra
+  namespace: gitops
+spec:
+  project: kind-study
+  source:
+    repoURL: https://github.com/your-org/kind-study.git
+    targetRevision: main
+    path: manifests/overlays/local/infra
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: infra
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

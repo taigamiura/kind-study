@@ -1,0 +1,15 @@
+controller:
+  kind: DaemonSet
+  service:
+    type: ClusterIP
+  hostPort:
+    enabled: true
+  admissionWebhooks:
+    enabled: false
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+  nodeSelector:
+    kubernetes.io/os: linux
+  watchIngressWithoutClass: true
