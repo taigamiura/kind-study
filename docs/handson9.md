@@ -72,6 +72,14 @@ Prometheus と Grafana の役割を分けて理解することも重要です。
 - [manifests/base/monitoring/postgres-exporter-servicemonitor.yaml](../manifests/base/monitoring/postgres-exporter-servicemonitor.yaml)
 - [scripts/install-monitoring.sh](../scripts/install-monitoring.sh)
 - [release-metrics.md](release-metrics.md)
+- [grafana-canary-checklist.md](grafana-canary-checklist.md)
+- [grafana-dashboard-guide.md](grafana-dashboard-guide.md)
+- [release-decision-template.md](release-decision-template.md)
+- [release-communication-template.md](release-communication-template.md)
+- [release-followup-checklist.md](release-followup-checklist.md)
+- [rollback-investigation-template.md](rollback-investigation-template.md)
+- [preventive-action-template.md](preventive-action-template.md)
+- [rerelease-readiness-checklist.md](rerelease-readiness-checklist.md)
 
 ## この回で実際にやること
 
@@ -81,6 +89,14 @@ Prometheus と Grafana の役割を分けて理解することも重要です。
 4. Grafana にアクセスできる状態を作る
 5. 最初に見るべきメトリクスを一覧で言えるようにする
 6. handson18 の canary 判断で何を見るかを整理する
+7. Grafana での確認順序を説明できるようにする
+8. Grafana で開く dashboard 候補を説明できるようにする
+9. 最終的に何を根拠に go/no-go を決めるか説明できるようにする
+10. 観測結果を短い共有文へ落とせるようにする
+11. promote / rollback 後の追跡監視で何を見るか説明できるようにする
+12. rollback 後に何を証跡として残すべきか説明できるようにする
+13. rollback 後の調査をどう改善アクションへ変えるか説明できるようにする
+14. 再リリース前に何を確認して go を出すか説明できるようにする
 
 ## 実行コマンド例
 
@@ -101,6 +117,14 @@ kubectl top pod -n apps
 - apps と observability に ServiceMonitor が作成されている
 - Grafana の入口と、見るべき最初のメトリクスを説明できる
 - canary 判断で最低限見る指標を [release-metrics.md](release-metrics.md) と結びつけて説明できる
+- Grafana でどの順番に確認するかを [grafana-canary-checklist.md](grafana-canary-checklist.md) と結びつけて説明できる
+- Grafana でどの dashboard を開けばよいかを [grafana-dashboard-guide.md](grafana-dashboard-guide.md) と結びつけて説明できる
+- 観測結果をどう判断記録へ落とすかを [release-decision-template.md](release-decision-template.md) と結びつけて説明できる
+- 観測結果をどう短く共有するかを [release-communication-template.md](release-communication-template.md) と結びつけて説明できる
+- 判断後に何を追跡監視するかを [release-followup-checklist.md](release-followup-checklist.md) と結びつけて説明できる
+- rollback 後に何を残して次の調査へつなぐかを [rollback-investigation-template.md](rollback-investigation-template.md) と結びつけて説明できる
+- rollback 後の調査結果をどう優先度つき改善へ落とすかを [preventive-action-template.md](preventive-action-template.md) と結びつけて説明できる
+- 再リリース前に何を満たせばよいかを [rerelease-readiness-checklist.md](rerelease-readiness-checklist.md) と結びつけて説明できる
 
 ## 実務で見る観点
 
@@ -171,5 +195,13 @@ kubectl logs -n observability -l app.kubernetes.io/name=postgres-exporter --tail
 監視がないと困ることは、単に気づくのが遅れるだけではありません。障害の影響範囲が分からない、改善前後を比較できない、復旧したか判断できない、といった問題も起きます。宿題では、検知、切り分け、復旧確認の 3 段階で何が困るかを考えると整理しやすいです。
 
 次に handson18 へ進むときは、[release-runbook.md](release-runbook.md) と [release-metrics.md](release-metrics.md) を一緒に読むと、Grafana や Prometheus を何のために見るのかがつながりやすくなります。
+
+さらに実務寄りに進めるなら、[grafana-canary-checklist.md](grafana-canary-checklist.md) を見ながら「どのパネルを、どの順番で、何分見るか」を言えるようにしてください。
+
+迷わず実画面を見たい場合は、[grafana-dashboard-guide.md](grafana-dashboard-guide.md) を見ながら dashboard 名と注目パネルを対応づけてください。
+
+最終的な実務力としては、「見た」だけではなく「だから promote した / rollback した / hold した」を言語化できることが重要です。[release-decision-template.md](release-decision-template.md) を使って、判断根拠を短く記録する練習も入れてください。
+
+さらにチーム運用まで含めるなら、その判断を他のメンバーへどう伝えるかも重要です。[release-communication-template.md](release-communication-template.md) を使って、開始、観測中、rollback、promote 完了の共有文も作れるようにしてください。
 
 次は [handson10.md](handson10.md) で GitOps と障害訓練に進みます。

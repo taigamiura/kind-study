@@ -15,8 +15,13 @@
 - mTLS の STRICT 化
 - カナリアリリース
 - スモークテストと切り戻し運用
+- PostgreSQL のバックアップ / 復旧
+- Secret / TLS 証明書の更新運用
+- SLO / Alert 設計
+- 障害初動とポストモーテム
+- リリース判断、共有、追跡監視、再リリース判定
 
-読み進める前に、用語で詰まりやすい人は [docs/glossary.md](docs/glossary.md) から先に読むと追いやすくなります。handson18 の実務向け運用手順は [docs/release-runbook.md](docs/release-runbook.md) に、昇格判断で見る指標は [docs/release-metrics.md](docs/release-metrics.md) にまとめています。
+学習順は [docs/handson.md](docs/handson.md) の handson1 から handson37 までで追えるように整理しています。用語で詰まりやすい人は [docs/glossary.md](docs/glossary.md) を辞書として併用してください。
 
 ## まず結論
 

@@ -20,7 +20,7 @@
 ## 先に読むと詰まりにくい資料
 
 - [glossary.md](glossary.md): このシリーズで頻出する Kubernetes 用語の先読み用ガイド
-- [release-runbook.md](release-runbook.md): handson18 で使う canary 観測、切り戻し、昇格の実務向け runbook
+- [glossary.md](glossary.md) は handson 本編の前後で何度も参照する辞書として使う
 
 ## 連番ハンズオン
 
@@ -42,6 +42,25 @@
 16. [handson16.md](handson16.md): HTTPS 化と TLS 証明書運用を学ぶ
 17. [handson17.md](handson17.md): Sidecar とサービスメッシュを学ぶ
 18. [handson18.md](handson18.md): mTLS の STRICT 化、カナリアリリース、切り戻しを学ぶ
+19. [handson19.md](handson19.md): PostgreSQL のバックアップ、復旧、DR の基本を学ぶ
+20. [handson20.md](handson20.md): Secret と TLS 証明書の更新運用を学ぶ
+21. [handson21.md](handson21.md): SLO、Alert、運用閾値の作り方を学ぶ
+22. [handson22.md](handson22.md): 障害初動、情報整理、ポストモーテムを学ぶ
+23. [handson23.md](handson23.md): リリース中に見るメトリクスの意味を学ぶ
+24. [handson24.md](handson24.md): Grafana での確認順序を学ぶ
+25. [handson25.md](handson25.md): Grafana の dashboard と panel の見方を学ぶ
+26. [handson26.md](handson26.md): リリース判断の記録方法を学ぶ
+27. [handson27.md](handson27.md): チームへの共有文の作り方を学ぶ
+28. [handson28.md](handson28.md): promote / rollback 後の追跡監視を学ぶ
+29. [handson29.md](handson29.md): rollback 後の初動調査メモを学ぶ
+30. [handson30.md](handson30.md): 再発防止アクションの整理を学ぶ
+31. [handson31.md](handson31.md): 再リリース可否の判定を学ぶ
+32. [handson32.md](handson32.md): canary リリース runbook を通しで学ぶ
+33. [handson33.md](handson33.md): PostgreSQL の backup / restore runbook を通しで学ぶ
+34. [handson34.md](handson34.md): Secret / Certificate rotation の確認を学ぶ
+35. [handson35.md](handson35.md): SLO / Alert テンプレートの作り方を学ぶ
+36. [handson36.md](handson36.md): 障害初動チェックリストを実践する
+37. [handson37.md](handson37.md): Postmortem を書いて運用改善へつなげる
 
 ## この分割にした理由
 
@@ -49,6 +68,6 @@
 - 途中で止めても再開しやすい
 - 実務に必要な論点を、順番に積み上げられる
 
-このシリーズは handson18 まで用意してあり、Helm、Kustomize、HPA、NetworkPolicy、CI/CD、HTTPS、サービスメッシュ、mTLS、カナリアリリース、切り戻し運用まで拡張できます。
+このシリーズは handson37 まで用意してあり、Helm、Kustomize、HPA、NetworkPolicy、CI/CD、HTTPS、サービスメッシュ、mTLS、カナリアリリース、切り戻し運用に加え、バックアップ / 復旧、Secret 更新、SLO / Alert、障害ふりかえり、再リリース判断まで順番に扱えます。
 
 用語が分からなくなったら、都度 [glossary.md](glossary.md) に戻って確認しながら進めてください。
