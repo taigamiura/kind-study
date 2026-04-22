@@ -69,6 +69,23 @@ kubectl get pod -w -n infra
 kubectl get pvc -n infra
 ```
 
+各コマンドの目的:
+
+- `kubectl apply -k manifests/base/postgres`: PostgreSQL 関連 manifest をまとめて反映する
+- `kubectl get all -n infra`: Pod、Service など主要 resource の作成状況を確認する
+- `kubectl get pvc -n infra`: 永続ボリューム要求が Bound になっているか確認する
+- `kubectl describe statefulset postgres -n infra`: StatefulSet がどの Pod と volume を管理しているか確認する
+- `kubectl delete pod postgres-0 -n infra`: Pod を再作成させて stateful workload の挙動を観察する
+- `kubectl get pod -w -n infra`: Pod の削除から再作成までを連続で観察する
+- `kubectl get pvc -n infra`: Pod 再作成後も PVC が残っていることを再確認する
+
+このコマンドで確認するのはここ:
+
+- `kubectl get all -n infra`: postgres Pod と Service が存在するか、`STATUS` が正常かを見る
+- `kubectl get pvc -n infra`: `STATUS` が `Bound` か、PVC 名が期待どおりかを見る
+- `kubectl describe statefulset postgres -n infra`: `Replicas`, `Pod Template`, `Volume Claims`, `Events` を見る
+- `kubectl get pod -w -n infra`: 削除後に postgres-0 が再作成される流れを追う
+
 ## 完了条件
 
 - infra namespace に postgres-0 が Running になっている
@@ -81,6 +98,8 @@ kubectl get pvc -n infra
 - 認証情報、永続化、可用性を別の論点として切り分けて考えられるか
 
 ## よくある失敗
+
+DB では `Pod が落ちた` と `データが消えた` を同じ問題として扱わないことが重要です。stateful workload は、まず PVC が生きているかを確認してからコンテナ側を見る方が早く切り分けられます。
 
 - Deployment と StatefulSet の違いを理解しないまま DB を配置する
 - PVC の状態を見ずに Pod が起動しない原因をコンテナ側だけで探す

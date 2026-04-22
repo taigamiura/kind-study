@@ -93,6 +93,21 @@ kubectl describe deployment item-service -n apps
 kubectl get endpoints -n apps
 ```
 
+各コマンドの目的:
+
+- `kubectl apply -k manifests/base/user-service`: user-service の manifest を反映する
+- `kubectl apply -k manifests/base/item-service`: item-service の manifest を反映する
+- `kubectl get deploy,po,svc -n apps`: Deployment、Pod、Service がそろって作成されたか確認する
+- `kubectl describe deployment user-service -n apps`: user-service の probe や rollout 状態を確認する
+- `kubectl describe deployment item-service -n apps`: item-service の probe や rollout 状態を確認する
+- `kubectl get endpoints -n apps`: Service selector が Pod に一致して endpoints が張られているか確認する
+
+このコマンドで確認するのはここ:
+
+- `kubectl get deploy,po,svc -n apps`: Deployment と Pod の `READY/AVAILABLE`、Service の存在を見る
+- `kubectl describe deployment ...`: `Replicas`, `Selector`, `Pod Template`, `Conditions`, `Events` を見る
+- `kubectl get endpoints -n apps`: user-service と item-service に実際の Pod IP がぶら下がっているかを見る
+
 ## 完了条件
 
 - user-service と item-service の Pod が Running になっている
@@ -105,6 +120,8 @@ kubectl get endpoints -n apps
 - readinessProbe と livenessProbe の設計が、実アプリの起動特性に合っているか
 
 ## よくある失敗
+
+この回では `Pod が Running` でも `Service で届く` とは限らない点が重要です。特に endpoints が空のときは、アプリ故障ではなく selector や Ready 判定の問題であることが多いです。
 
 - readinessProbe と livenessProbe を同じ意味で使ってしまう
 - Service があるのに selector 不一致で endpoints が空になる

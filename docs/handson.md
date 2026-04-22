@@ -20,6 +20,7 @@
 ## 先に読むと詰まりにくい資料
 
 - [glossary.md](glossary.md): このシリーズで頻出する Kubernetes 用語の先読み用ガイド
+- [kubectl-inspection-guide.md](kubectl-inspection-guide.md): `kubectl get` や `kubectl describe` でどこを見ればよいかをまとめた確認ガイド
 - 分からない用語が出たら [glossary.md](glossary.md) に戻る
 
 ## 連番ハンズオン

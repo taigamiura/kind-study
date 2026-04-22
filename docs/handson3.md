@@ -69,6 +69,19 @@ kubectl describe namespace apps
 kubectl describe namespace infra
 ```
 
+各コマンドの目的:
+
+- `kubectl apply -k manifests/base/namespaces`: namespace 定義をまとめて作成する
+- `kubectl get namespaces`: 期待した namespace が実際に作られたか一覧で確認する
+- `kubectl describe namespace apps`: apps の用途や付与情報を個別に確認する
+- `kubectl describe namespace infra`: infra の用途や付与情報を個別に確認する
+
+このコマンドで確認するのはここ:
+
+- `kubectl get namespaces`: `STATUS` が `Active` か、必要な namespace 名がそろっているかを見る
+- `kubectl describe namespace apps`: `Labels`, `Annotations`, `Resource Quotas`, `Limit Ranges` の有無を見る
+- `kubectl describe namespace infra`: apps と同様に namespace 単位の付与情報を見る
+
 ## 完了条件
 
 - apps、infra、observability、gitops、ingress-nginx が作成されている
@@ -80,6 +93,8 @@ kubectl describe namespace infra
 - 追加のサービスが来たときに、既存 namespace に入れるか新設するか判断できるか
 
 ## よくある失敗
+
+この回の失敗は、`とりあえず動けばよい` で分割基準を後回しにしたときに起きやすいです。namespace は後から整理するほど移行コストが上がるので、最初に役割ベースで切る方が学習でも実務でも安定します。
 
 - default namespace に一旦全部入れてから後で分けようとする
 - 役割ではなくサービス名ベースで namespace を細かく分けすぎる

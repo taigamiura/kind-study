@@ -13,7 +13,8 @@ web-app と API の分離構成を学ぶ。
 ## この回の前提
 
 - [handson6.md](handson6.md) まで進めており、`user-service` と `item-service` の Pod と Service が apps namespace に存在している
-- ingress-nginx が導入済みで、`http://localhost/` へアクセスできる状態である
+- ingress-nginx が導入済みで、`http://app.localtest.me/` へアクセスできる状態である
+- [manifests/base/ingress/web-app-ingress.yaml](../manifests/base/ingress/web-app-ingress.yaml)、[manifests/base/ingress/user-service-ingress.yaml](../manifests/base/ingress/user-service-ingress.yaml)、[manifests/base/ingress/item-service-ingress.yaml](../manifests/base/ingress/item-service-ingress.yaml) が同じ host `app.localtest.me` を使っていると理解している
 
 この前提が欠けていると、web-app の HTML は見えても `/api/users` や `/api/items` は 404 や 503 になることがあります。これは web-app の失敗というより、API 側の入口や backend がまだ整っていない状態です。
 
@@ -63,7 +64,9 @@ web-app と API の分離構成を学ぶ。
 4. ブラウザまたは curl でトップページへアクセスし、画面が返ることを確認する
 5. web-app から /api/users と /api/items を呼ぶ構成になっていることを確認する
 
-この回で最優先の確認は `http://localhost/` で HTML が返ることです。`/api/users` と `/api/items` の成功応答は、API 側 Service、Ingress、Pod の Ready がそろって初めて成立します。
+この回で最優先の確認は `http://app.localtest.me/` で HTML が返ることです。`/api/users` と `/api/items` の成功応答は、API 側 Service、Ingress、Pod の Ready がそろって初めて成立します。
+
+この教材では、web-app と API が別 Service でも、ブラウザから見える入口は `app.localtest.me` に統一しています。つまり `http://app.localtest.me/` を開いたブラウザが、同じ host の `/api/users` と `/api/items` を呼びます。
 
 ## 実行コマンド例
 
@@ -73,15 +76,33 @@ kubectl apply -f manifests/base/ingress/web-app-ingress.yaml
 kubectl get deploy,po,svc -n apps
 kubectl get ingress -n apps
 kubectl describe deployment web-app -n apps
-curl -I http://localhost/
-curl http://localhost/
+curl -I http://app.localtest.me/
+curl http://app.localtest.me/
 ```
+
+各コマンドの目的:
+
+- `kubectl apply -k manifests/base/web-app`: web-app の Deployment と Service を反映する
+- `kubectl apply -f manifests/base/ingress/web-app-ingress.yaml`: web-app 用の公開入口を反映する
+- `kubectl get deploy,po,svc -n apps`: web-app の作成状況をまとめて確認する
+- `kubectl get ingress -n apps`: Ingress が apps namespace に存在するか確認する
+- `kubectl describe deployment web-app -n apps`: Pod 更新状態やイベントを確認する
+- `curl -I http://app.localtest.me/`: HTTP レベルでトップページの入口が応答しているか確認する
+- `curl http://app.localtest.me/`: 実際に HTML が返るか確認する
+
+このコマンドで確認するのはここ:
+
+- `kubectl get deploy,po,svc -n apps`: web-app の `READY/AVAILABLE` と Service の存在を見る
+- `kubectl get ingress -n apps`: `HOSTS` に `app.localtest.me` があるかを見る
+- `kubectl describe deployment web-app -n apps`: `Conditions` と `Events` を見て rollout が止まっていないか確認する
+- `curl -I http://app.localtest.me/`: ステータスコードが 200 系か 30x かを確認する
+- `curl http://app.localtest.me/`: HTML が返り、期待した文言や script が含まれるか確認する
 
 ## 完了条件
 
 - web-app Pod と Service が apps namespace に作成されている
 - web-app Ingress が作成されている
-- http://localhost/ へアクセスして HTML が返る
+- http://app.localtest.me/ へアクセスして HTML が返る
 - HTML 内で /api/users と /api/items を呼んでいることを説明できる
 
 次が起きた場合の見方も言えるとなおよいです。
@@ -96,8 +117,10 @@ curl http://localhost/
 
 ## よくある失敗
 
+この回では `画面が出た` と `システム全体が正常` を分けて考える必要があります。トップページ表示だけでは API 側の失敗を見落とせるので、画面と API を別々に確認する癖が重要です。
+
 - web-app だけ公開して API 側 Ingress や Service の疎通確認をしない
-- localhost の応答だけ見て、HTML 内の API 呼び出し失敗を見落とす
+- app.localtest.me のトップページだけ見て、HTML 内の API 呼び出し失敗を見落とす
 - ブラウザとクラスタ内部の通信経路を混同して CORS や認証の論点を整理できない
 
 ## 詰まったときの確認コマンド
@@ -106,15 +129,15 @@ curl http://localhost/
 kubectl get deploy,po,svc,ingress -n apps
 kubectl describe deployment web-app -n apps
 kubectl logs -l app.kubernetes.io/name=web-app -n apps
-curl -I http://localhost/
-curl http://localhost/ | head -n 40
-curl http://localhost/api/users
-curl http://localhost/api/items
+curl -I http://app.localtest.me/
+curl http://app.localtest.me/ | head -n 40
+curl http://app.localtest.me/api/users
+curl http://app.localtest.me/api/items
 ```
 
 読み方の目安:
 
-- `http://localhost/` が返る: web-app 配信と web-app Ingress は概ね成功
+- `http://app.localtest.me/` が返る: web-app 配信と web-app Ingress は概ね成功
 - `/api/users` が 404: API 用 Ingress がまだ無いか path が一致していない可能性がある
 - `/api/users` が 503: API 用 Ingress はあるが backend Pod や Service 経路が不健康な可能性がある
 

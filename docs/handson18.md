@@ -69,6 +69,26 @@ kubectl describe peerauthentication apps-strict -n apps
 kubectl describe virtualservice user-service-canary -n apps
 ```
 
+各コマンドの目的:
+
+- `bash scripts/mesh-release-preflight.sh`: canary と STRICT 化の前提条件を先に確認する
+- `kubectl apply -k manifests/extensions/servicemesh-advanced`: advanced mesh 設定を反映する
+- `kubectl get deploy,svc,virtualservice,peerauthentication -n apps`: canary と mTLS の主要 resource が作成されたか確認する
+- `bash scripts/mesh-canary-smoke-test.sh`: canary 宛てトラフィックが返るか軽く確認する
+- `bash scripts/mesh-release-observe.sh`: release 中の Pod 状態や負荷観測をまとめて確認する
+- `bash scripts/mesh-release-summary.sh`: release 判断に必要な要点をまとめて確認する
+- `kubectl describe peerauthentication apps-strict -n apps`: STRICT 設定の中身を確認する
+- `kubectl describe virtualservice user-service-canary -n apps`: stable/canary の振り分け設定を確認する
+
+このコマンドで確認するのはここ:
+
+- `kubectl get deploy,svc,virtualservice,peerauthentication -n apps`: canary 用 resource 名が出ているかを見る
+- `bash scripts/mesh-canary-smoke-test.sh`: stable/canary が混ざって返るかを見る
+- `bash scripts/mesh-release-observe.sh`: Pod 状態、再起動、負荷の要約を見る
+- `bash scripts/mesh-release-summary.sh`: go/no-go 判断の要点を見る
+- `kubectl describe peerauthentication apps-strict -n apps`: `mtls.mode` と `Events` を見る
+- `kubectl describe virtualservice user-service-canary -n apps`: host、subset、weight を見る
+
 ## 完了条件
 
 - `user-service-canary` の Pod と Service が作成されている
@@ -82,6 +102,8 @@ kubectl describe virtualservice user-service-canary -n apps
 - canary の重み付けを使って、変更を一気に全量へ出さずに済むか
 
 ## よくある失敗
+
+この回は `設定を入れる` ことより `安全に切り替える` ことが本質です。STRICT や canary は一見 YAML 変更ですが、実際には移行計画と観測基準が無いと危険な変更になります。
 
 - sidecar 未注入の Pod が残ったまま `STRICT` に上げて通信断を起こす
 - canary 用 Service はあるが VirtualService の host や weight が正しくなく、期待どおりに流量が分かれない

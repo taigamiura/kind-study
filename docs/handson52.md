@@ -46,6 +46,8 @@ CRD と Operator の仕組みを学ぶ。
 
 ## よくある失敗
 
+この回の失敗は、CRD や Operator を便利な自動化としてだけ見ると起きやすいです。箇条書きは別々に見えても、背景には `どこまでを宣言し, どこからを controller が補うか` の理解不足があります。
+
 - CRD をただの YAML 追加だと思う
 - controller がいない custom resource を apply して終わる
 - finalizer で削除詰まりが起こる意味を理解しない

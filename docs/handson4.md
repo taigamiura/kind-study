@@ -8,7 +8,7 @@ Ingress と入口設計を学ぶ。
 
 - Ingress の役割を説明できる
 - web-app と API の入口をどう統一するか理解できる
-- localhost へのポートマッピングが何のためか説明できる
+- app.localtest.me への入口が kind に届く理由を説明できる
 
 ## この回で先に押さえる用語
 
@@ -21,9 +21,9 @@ Ingress と入口設計を学ぶ。
 
 ## 今回の構成
 
-- / -> web-app
-- /api/users -> user-service
-- /api/items -> item-service
+- http://app.localtest.me/ -> web-app
+- http://app.localtest.me/api/users -> user-service
+- http://app.localtest.me/api/items -> item-service
 
 ## 目的
 
@@ -46,7 +46,7 @@ Ingress を学ぶときにまず押さえるべきなのは、外部からの入
 
 この役割分担を理解すると、なぜ web-app は /、API は /api/users や /api/items に振り分けるのかが見えてきます。利用者やブラウザから見ると入口は 1 つですが、裏側では適切な Service に振り分けられています。これは本番のロードバランサや API ゲートウェイの設計と発想が同じです。
 
-kind の extraPortMappings が重要なのは、ローカル PC の 80 番や 443 番を kind クラスタの中の Ingress Controller に渡すためです。これがあることで、localhost 経由で本番に近い流れを再現できます。ローカル学習でも入口設計を省略しないことが、後で実務に入るときの理解差になります。
+ kind の extraPortMappings が重要なのは、ローカル PC の 80 番や 443 番を kind クラスタの中の Ingress Controller に渡すためです。これがあることで、`app.localtest.me` のようなホスト名で本番に近い流れを再現できます。`localtest.me` は 127.0.0.1 を向くため、hosts を手で書かなくてもローカル学習しやすいのが利点です。ローカル学習でも入口設計を省略しないことが、後で実務に入るときの理解差になります。
 
 対応ファイル:
 
@@ -59,7 +59,7 @@ kind の extraPortMappings が重要なのは、ローカル PC の 80 番や 44
 ## この回で実際にやること
 
 1. ingress-nginx を Helm でインストールする
-2. web-app、user-service、item-service 用 Ingress 定義を読む
+2. web-app、user-service、item-service 用 Ingress 定義を読み、3 つとも `app.localtest.me` を入口にしていることを確認する
 3. Ingress manifest を apply する
 4. どの path がどの Service に流れるかを確認する
 
@@ -75,11 +75,27 @@ kubectl describe ingress user-service -n apps
 kubectl describe ingress item-service -n apps
 ```
 
+各コマンドの目的:
+
+- `bash scripts/install-ingress-nginx.sh`: Ingress Controller 本体を先に導入する
+- `kubectl apply -k manifests/base/ingress`: web-app と API 用の Ingress 定義を反映する
+- `kubectl get pods -n ingress-nginx`: controller Pod が起動しているか確認する
+- `kubectl get ingress -n apps`: apps namespace に Ingress が作成されたか確認する
+- `kubectl describe ingress web-app -n apps`: `/` のルーティング先を確認する
+- `kubectl describe ingress user-service -n apps`: `/api/users` のルーティング先と rewrite を確認する
+- `kubectl describe ingress item-service -n apps`: `/api/items` のルーティング先と rewrite を確認する
+
+このコマンドで確認するのはここ:
+
+- `kubectl get pods -n ingress-nginx`: `READY`, `STATUS`, `RESTARTS` を見て controller が安定稼働しているか確認する
+- `kubectl get ingress -n apps`: `CLASS`, `HOSTS`, `PORTS` を見て Ingress が正しく作成されたか確認する
+- `kubectl describe ingress ...`: `Ingress Class`, `Rules`, `Backend`, `Annotations`, `Events` を見る
+
 ## 完了条件
 
 - ingress-nginx namespace で controller Pod が起動している
 - apps namespace に 3 つの Ingress が作成されている
-- /、/api/users、/api/items の振り分け先を説明できる
+- `http://app.localtest.me/`、`/api/users`、`/api/items` の振り分け先を説明できる
 
 ## 実務で見る観点
 
@@ -88,9 +104,11 @@ kubectl describe ingress item-service -n apps
 
 ## よくある失敗
 
+Ingress まわりは、入口、ルール、backend の 3 層を分けずに見ると混乱しやすいです。まず controller がいるか、次に rule があるか、最後に backend Service へ届くかの順で見ると切り分けやすくなります。
+
 - Ingress Controller を入れずに Ingress manifest だけ apply して動かないと悩む
 - path の rewrite や ingressClassName を見落として想定外の宛先に流す
-- localhost にアクセスできず、kind の port mapping を確認しない
+- `app.localtest.me` へアクセスできないのに、kind の port mapping や Ingress の host 設定を確認しない
 
 ## 詰まったときの確認コマンド
 
@@ -106,7 +124,7 @@ kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller --tail=1
 
 想定シナリオ:
 
-- http://localhost にアクセスしても 404 や 503 が返る
+- http://app.localtest.me にアクセスしても 404 や 503 が返る
 - 一部パスだけ別 Service に流れず、API 呼び出しが失敗する
 
 復旧の考え方:
@@ -141,6 +159,8 @@ kubectl logs -n ingress-nginx -l app.kubernetes.io/component=controller --tail=1
 kubectl get svc -A
 kubectl get ingress -A
 kubectl describe ingress -n apps
+curl -I http://app.localtest.me/
+curl http://app.localtest.me/api/users
 ```
 
 ## この回で理解すべきこと

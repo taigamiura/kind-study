@@ -58,12 +58,38 @@ kubectl describe hpa user-service -n apps
 kubectl describe hpa item-service -n apps
 ```
 
+各コマンドの目的:
+
+- `bash scripts/install-metrics-server.sh`: Metrics API を提供する metrics-server を導入する
+- `kubectl apply -k manifests/extensions/hpa`: HPA 定義を apps namespace に反映する
+- `kubectl top pods -n apps`: CPU 指標が取得できているか確認する
+- `kubectl get hpa -n apps`: HPA が作成されているか一覧で確認する
+- `kubectl describe hpa user-service -n apps`: user-service の target や現在値を確認する
+- `kubectl describe hpa item-service -n apps`: item-service の target や現在値を確認する
+
+このコマンドで確認するのはここ:
+
+- `kubectl top pods -n apps`: `CPU(cores)` と `MEMORY(bytes)` を見て、そもそも Metrics API から値が返るか確認する
+- `kubectl get hpa -n apps`: `TARGETS` が `現在値 / 目標値` で出ているか、`REPLICAS` が min/max の範囲でどうなっているかを見る
+- `kubectl describe hpa user-service -n apps`: `Metrics` で current/target、`Conditions` で `ScalingActive` と `AbleToScale`、`Events` で metrics 取得失敗履歴がないかを見る
+- `kubectl describe hpa item-service -n apps`: user-service と同じく `Metrics`、`Conditions`、`Events` を見る
+
 最初の 2 つの確認ポイント:
 
 ```bash
 kubectl get pods -n kube-system | grep metrics-server
 kubectl top pods -n apps
 ```
+
+最初の 2 つの確認コマンドの目的:
+
+- `kubectl get pods -n kube-system | grep metrics-server`: metrics-server Pod が起動済みか確認する
+- `kubectl top pods -n apps`: HPA が参照する CPU 指標が取得できるか確認する
+
+このコマンドで確認するのはここ:
+
+- `kubectl get pods -n kube-system | grep metrics-server`: `Running` か、`RESTARTS` が増え続けていないかを見る
+- `kubectl top pods -n apps`: エラーではなく数値が返るかを見る。ここが失敗するなら HPA の前提がまだ整っていない
 
 ここで `kubectl top` が通って初めて、HPA が CPU 指標を参照できる前提が整ったと考えます。
 
@@ -80,6 +106,8 @@ kubectl top pods -n apps
 - 自動スケールの前提として requests が重要だと理解しているか
 
 ## よくある失敗
+
+HPA では `設定を書いた` ことより `指標が取れている` ことの方が先です。metrics-server、requests、target の 3 つがそろって初めて意味が出るので、まず前提条件から確認するのが重要です。
 
 - metrics-server 未導入のまま HPA を apply して動かない
 - handson9 で Grafana を見られたので `kubectl top` も使えるはずだと誤解する

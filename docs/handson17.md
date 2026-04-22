@@ -53,6 +53,25 @@ kubectl exec -n apps deploy/sleep -c sleep -- curl -s http://user-service:9898/h
 kubectl exec -n apps deploy/sleep -c sleep -- curl -s http://item-service:9898/healthz
 ```
 
+各コマンドの目的:
+
+- `bash scripts/install-istio.sh`: Istio control plane を導入する
+- `kubectl apply -k manifests/extensions/servicemesh`: mesh 用 manifest を反映する
+- `kubectl rollout restart deployment user-service -n apps`: sidecar 注入を反映するため user-service を再起動する
+- `kubectl rollout restart deployment item-service -n apps`: sidecar 注入を反映するため item-service を再起動する
+- `kubectl rollout restart deployment web-app -n apps`: sidecar 注入を反映するため web-app を再起動する
+- `kubectl get pods -n istio-system`: Istio 本体が起動しているか確認する
+- `kubectl get pods -n apps`: apps 側 Pod に sidecar が入ったか確認する
+- `kubectl exec -n apps deploy/sleep -c sleep -- curl -s http://user-service:9898/healthz`: mesh 内から user-service へ疎通できるか確認する
+- `kubectl exec -n apps deploy/sleep -c sleep -- curl -s http://item-service:9898/healthz`: mesh 内から item-service へ疎通できるか確認する
+
+このコマンドで確認するのはここ:
+
+- `kubectl get pods -n istio-system`: control plane Pod の `READY/STATUS` を見る
+- `kubectl get pods -n apps`: sidecar 注入後にコンテナ数が増えているかを `READY` で見る
+- `kubectl exec ... user-service`: healthz が成功応答するかを見る
+- `kubectl exec ... item-service`: healthz が成功応答するかを見る
+
 ## 完了条件
 
 - istio-system namespace に control plane Pod が起動している
@@ -66,6 +85,8 @@ kubectl exec -n apps deploy/sleep -c sleep -- curl -s http://item-service:9898/h
 - retries、timeouts、mTLS をアプリ実装から分離して運用できるか
 
 ## よくある失敗
+
+サービスメッシュでは、設定を入れたあと Pod を入れ替えないと sidecar が反映されないことが多いです。`manifest を apply した` だけで終わらず、注入結果と通信結果の両方を確認する必要があります。
 
 - namespace へ injection label を付けた後に Pod 再起動をせず、sidecar が入らない
 - sidecar 注入後のコンテナ数や logs を見ずに mesh 化できたと思い込む

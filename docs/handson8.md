@@ -19,6 +19,14 @@ Ridgepole による DB スキーマ運用を学ぶ。
 
 用語に迷ったら [glossary.md](glossary.md) の Schema Migration、Ridgepole、Manifest を先に確認してください。
 
+## この回の前提
+
+- PostgreSQL の Pod が起動していて、`postgres-secret` が参照できる状態である
+- Ridgepole Job は `1 回実行して終わる Job` なので、Completed 後に同じ manifest をもう一度 apply しても自動では再実行されない
+- そのため `再実行したいときは Job を消してから apply し直す` という操作が必要になる
+
+この回は `apply したのに何も起きない` で詰まりやすいです。特に 2 回目以降は、Job がすでに Completed だから動かないだけ、ということがあります。
+
 ## 目的
 
 - 手動 SQL ではなく、再現性のある DB 変更フローを学ぶ
@@ -48,26 +56,58 @@ Ridgepole による DB スキーマ運用を学ぶ。
 
 ## この回で実際にやること
 
-1. Ridgepole 用 ConfigMap を開いて Schemafile の内容を読む
-2. Job manifest を開いて、どの image と command で schema apply しているか確認する
-3. Ridgepole Job を apply する
-4. Job の完了とログを確認する
-5. PostgreSQL にテーブルが作られた想定で、スキーマ変更をコード管理する意味を整理する
+1. PostgreSQL Pod と Secret が先にそろっているか確認する
+2. Ridgepole 用 ConfigMap を開いて Schemafile の内容を読む
+3. Job manifest を開いて、どの image と command で schema apply しているか確認する
+4. Ridgepole Job を apply する
+5. Job の完了とログを確認する
+6. PostgreSQL にテーブルが作られた想定で、スキーマ変更をコード管理する意味を整理する
 
 ## 実行コマンド例
 
 ```bash
+kubectl get pods -n infra
+kubectl get secret postgres-secret -n infra
 kubectl apply -k manifests/base/ridgepole
 kubectl get job -n infra
 kubectl logs job/ridgepole-apply -n infra
 kubectl describe job ridgepole-apply -n infra
 ```
 
+各コマンドの目的:
+
+- `kubectl get pods -n infra`: PostgreSQL 側が先に起動しているか確認する
+- `kubectl get secret postgres-secret -n infra`: Ridgepole Job が参照する接続情報 Secret の存在を確認する
+- `kubectl apply -k manifests/base/ridgepole`: Schemafile を適用する Job を作成する
+- `kubectl get job -n infra`: Job が作成されて進行しているか確認する
+- `kubectl logs job/ridgepole-apply -n infra`: schema apply の成否をログで確認する
+- `kubectl describe job ridgepole-apply -n infra`: Job のイベントや失敗理由を確認する
+
+このコマンドで確認するのはここ:
+
+- `kubectl get pods -n infra`: postgres Pod が `Running` かを見る
+- `kubectl get secret postgres-secret -n infra`: Secret 名が存在するかだけでなく、参照先が合っている前提を確認する
+- `kubectl get job -n infra`: `COMPLETIONS`, `DURATION`, `AGE` を見る
+- `kubectl describe job ridgepole-apply -n infra`: `Pods Status`, `Events` を見て失敗原因を確認する
+
+もう一度試したいときは次を使います。
+
+```bash
+kubectl delete job ridgepole-apply -n infra
+kubectl apply -k manifests/base/ridgepole
+```
+
+再実行コマンドの目的:
+
+- `kubectl delete job ridgepole-apply -n infra`: Completed 済み Job をいったん消して再実行可能にする
+- `kubectl apply -k manifests/base/ridgepole`: Job を作り直して再度 schema apply を試す
+
 ## 完了条件
 
 - ridgepole-apply Job が Completed になっている
 - logs から schema apply が実行されたことを確認できる
 - Schemafile を変更すると DB 構造も変わる、という流れを説明できる
+- `Completed の Job は apply だけでは再実行されない` と説明できる
 
 ## 実務で見る観点
 
@@ -76,6 +116,9 @@ kubectl describe job ridgepole-apply -n infra
 
 ## よくある失敗
 
+Job は Deployment と違って `完了したら終わり` です。そのため、`apply したのに何も起きない` と感じたときは、失敗より先に `そもそも再実行されていないのでは` を疑うと切り分けが速くなります。
+
+- Completed 済み Job に対して再度 `kubectl apply -k` すればもう一度走ると思い込む
 - DB スキーマ変更をアプリの再デプロイと同じ感覚で戻せると思い込む
 - Job の失敗ログを見ずに、DB 側の接続情報や権限ミスを見落とす
 - 破壊的変更を 1 回で入れようとして互換性を壊す
@@ -84,11 +127,14 @@ kubectl describe job ridgepole-apply -n infra
 
 ```bash
 kubectl get jobs -n infra
+kubectl get pods -n infra
 kubectl describe job ridgepole-apply -n infra
 kubectl logs job/ridgepole-apply -n infra
 kubectl get secret postgres-secret -n infra -o yaml
 kubectl get configmap ridgepole-files -n infra -o yaml
 ```
+
+`kubectl get job -n infra` で `Completed` のまま変化がない場合は、`失敗していない` のではなく `新しく実行されていない` 可能性があります。Job は Deployment と違って、同じ manifest を apply しただけでは毎回走るわけではありません。
 
 ## 障害シナリオと復旧の考え方
 
@@ -133,6 +179,8 @@ kubectl get configmap ridgepole-files -n infra -o yaml
 ただし、アプリのデプロイと DB スキーマ変更は同じではありません。アプリは古いバージョンに戻しやすい場合がありますが、DB の破壊的変更は簡単に戻せないことがあります。だからこそ、追加変更と削除変更を分ける、先に互換性のある変更を入れる、といった慎重な設計が必要です。
 
 Job で流すか CI で流すかは、誰がいつ適用責任を持つかという運用設計の話でもあります。手元から直接 DB を変えるのではなく、仕組みの中で再現可能に適用するという考え方が重要です。実務では、技術選定そのものよりも、その運用ルールの方が事故防止に効きます。
+
+もう 1 つ大事なのは、Job の性質を Deployment と混同しないことです。Deployment は desired replicas を保ち続けますが、Job は `完了したら終わり` です。そのため、Ridgepole のような一回処理は Job と相性が良い一方で、再試行のやり方を知らないと `apply したのに変化しない` と感じやすくなります。ここを理解しておくと、migration 系運用の事故が減ります。
 
 ## この回の宿題
 

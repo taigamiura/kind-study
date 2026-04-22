@@ -46,6 +46,8 @@ affinity、anti-affinity、topology spread で配置設計を学ぶ。
 
 ## よくある失敗
 
+この回の失敗は、配置制御を `何となく分散されそう` で入れると起きやすいです。箇条書きは別々に見えても、背景には `どの偏りを防ぎたいか` の明確化不足があります。
+
 - replica は増やしたが同じ Node に固まる
 - anti-affinity を厳しくしすぎてスケジュールできない
 - topology spread の前提となる label 設計が曖昧

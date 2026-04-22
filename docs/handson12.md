@@ -19,6 +19,14 @@ Kustomize で base と overlay を使い分ける。
 
 用語に迷ったら [glossary.md](glossary.md) の Kustomize、Manifest を先に確認してください。
 
+## この回の前提
+
+- `kubectl kustomize` は `最終的にどんな YAML になるかを見る` コマンドで、まだ apply はしない
+- `kubectl apply -k` は Kustomize の結果をそのままクラスタへ適用するコマンドである
+- 初学者は `いきなり apply -k` する前に、先に `kubectl kustomize` で build 結果を見る癖を付けた方が安全
+
+この回は `Kustomize を使えるようになる` だけでなく、`apply 前に build を読む` 流れを身につける回です。
+
 ## このリポジトリの構成
 
 - [manifests/base/namespaces/kustomization.yaml](../manifests/base/namespaces/kustomization.yaml)
@@ -36,7 +44,8 @@ Kustomize で base と overlay を使い分ける。
 1. base と overlays/local の kustomization.yaml を順に開く
 2. local overlay がどの base をまとめているか確認する
 3. local overlay を build して、最終的にどんな YAML になるかを見る
-4. どの設定が base にあり、どの設定が overlay にあるかを分類する
+4. `kubectl kustomize` と `kubectl apply -k` の役割の違いを整理する
+5. どの設定が base にあり、どの設定が overlay にあるかを分類する
 
 ## 実行コマンド例
 
@@ -45,13 +54,34 @@ kubectl kustomize manifests/overlays/local
 kubectl kustomize manifests/overlays/local/infra
 kubectl kustomize manifests/overlays/local/apps
 kubectl kustomize manifests/overlays/local/observability
+kubectl apply -k manifests/overlays/local/apps
 ```
+
+各コマンドの目的:
+
+- `kubectl kustomize manifests/overlays/local`: local 全体の最終 YAML を組み立てて確認する
+- `kubectl kustomize manifests/overlays/local/infra`: infra 側だけの build 結果を確認する
+- `kubectl kustomize manifests/overlays/local/apps`: apps 側だけの build 結果を確認する
+- `kubectl kustomize manifests/overlays/local/observability`: observability 側だけの build 結果を確認する
+- `kubectl apply -k manifests/overlays/local/apps`: build 結果をそのまま apps 側へ反映する
+
+このコマンドで確認するのはここ:
+
+- `kubectl kustomize ...`: `kind`, `metadata.name`, `namespace`, image, replicas などが期待どおりに展開されているかを見る
+- `kubectl apply -k manifests/overlays/local/apps`: apply 後に apps 側 resource が増える前提で使う。反映後は `kubectl get ...` で結果を見る
+
+読み分けの目安:
+
+- `kubectl kustomize ...`: 適用前に最終 YAML を見る
+- `kubectl diff -k ...`: 今のクラスタとの差分を見る
+- `kubectl apply -k ...`: build した結果をクラスタへ反映する
 
 ## 完了条件
 
 - local overlay が base を束ねた最終構成だと理解できる
 - どの差分を overlay に置くべきか説明できる
 - kustomize build の結果を読み、適用前に内容確認できる
+- `kubectl kustomize` と `kubectl apply -k` の違いを説明できる
 
 ## 実務で見る観点
 
@@ -60,6 +90,9 @@ kubectl kustomize manifests/overlays/local/observability
 
 ## よくある失敗
 
+Kustomize では `組み立てた` と `反映した` を分けて考えないと学習が崩れます。まず build で中身を読み、その後に diff や apply へ進む順番を守ると、想定外の変更を入れにくくなります。
+
+- `kubectl kustomize` したので apply も終わったと思い込む
 - base を直接書き換えて環境差分とアプリ本体の責務を混ぜる
 - overlay を増やしたのに build 結果を見ず、想定外の YAML を apply する
 - Helm と Kustomize の役割分担が曖昧で構成が二重管理になる
@@ -129,6 +162,8 @@ kubectl diff -k manifests/overlays/local
 Kustomize の価値は、同じアプリを複数環境で運用するときに差分だけを管理できることです。base にはアプリの本質的な構成を置き、local や production のような環境ごとの差だけを overlay に置きます。これにより、同じ YAML をコピペして増殖させる状態を避けられます。
 
 ここで重要なのは、「何が本質で、何が環境差分か」を見極めることです。アプリ名、ポート、基本的なコンテナ構成は base に残し、replica 数、image tag、ノード配置など環境依存の要素を overlay に寄せるのが自然です。この切り分けが曖昧だと、Kustomize を使っていても構成は散らかります。
+
+もう 1 つ重要なのは、`build と apply を分けて考える` ことです。`kubectl kustomize` は最終 YAML の確認で、`kubectl apply -k` はその結果をクラスタに反映する操作です。この差を曖昧にしたまま進むと、`見ただけなのか、反映したのか` が自分でも分からなくなります。初学者ほど、まず build、次に diff、最後に apply の順で確認する方が事故が減ります。
 
 Argo CD と相性が良い理由もここにあります。Git 上の overlay は、その環境に適用すべき最終的な構成を宣言できます。実務では、「何を共通化し、何を環境ごとに変えるか」を明確にできる人ほど、構成管理が安定します。
 

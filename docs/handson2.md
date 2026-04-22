@@ -37,6 +37,12 @@ kubectl get pods -A -o wide
 kubectl describe node study-k8s-worker
 ```
 
+このコマンドで確認するのはここ:
+
+- `kubectl get nodes -o wide`: `ROLES`, `STATUS`, `VERSION`, `INTERNAL-IP` を見て control plane と worker の役割を確認する
+- `kubectl get pods -A -o wide`: `NAMESPACE`, `NAME`, `STATUS`, `NODE` を見て Pod がどの Node に載っているか確認する
+- `kubectl describe node study-k8s-worker`: `Roles`, `Addresses`, `Capacity`, `Allocatable`, `Non-terminated Pods`, `Events` を見て Node の役割と状態を確認する
+
 ## 観察ポイント
 
 - どの Node が control plane か

@@ -44,6 +44,20 @@ kubectl get pods -A
 kubectl get events -A --sort-by=.lastTimestamp | tail -n 30
 ```
 
+各コマンドの目的:
+
+- `bash scripts/cluster-ops-snapshot.sh`: 障害初動の証跡をまとめて保存する
+- `ls -1 artifacts/cluster-snapshots`: snapshot が保存されたことを確認する
+- `kubectl get pods -A`: 全 namespace の Pod 状態を俯瞰して影響範囲を把握する
+- `kubectl get events -A --sort-by=.lastTimestamp | tail -n 30`: 直近イベントから何が起きたかの時系列を把握する
+
+このコマンドで確認するのはここ:
+
+- `bash scripts/cluster-ops-snapshot.sh`: snapshot 保存先が出力されるかを見る
+- `ls -1 artifacts/cluster-snapshots`: 時刻付き snapshot ディレクトリが作られたかを見る
+- `kubectl get pods -A`: どの namespace で `CrashLoopBackOff`, `Pending`, `Error` が出ているかを見る
+- `kubectl get events -A --sort-by=.lastTimestamp | tail -n 30`: 直近の異常イベントとその namespace を見る
+
 ## 完了条件
 
 - 障害初動の確認順序を説明できる
@@ -57,6 +71,8 @@ kubectl get events -A --sort-by=.lastTimestamp | tail -n 30
 - 復旧後に `誰が何を直すか` まで落としているか
 
 ## よくある失敗
+
+障害初動では、深掘りの速さより順番の正しさが重要です。証跡を残さずにログへ潜ると、後から判断理由も改善点も説明できなくなります。
 
 - いきなり深掘りログ調査に入り、影響抑制が遅れる
 - 時系列を残さず、後から判断理由を再現できない

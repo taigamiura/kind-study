@@ -47,6 +47,18 @@ kubectl get pods -n apps
 kubectl get events -A --sort-by=.lastTimestamp | tail -n 20
 ```
 
+各コマンドの目的:
+
+- `kubectl top pod -n apps`: 現在の CPU や Memory の傾向をざっくり把握する
+- `kubectl get pods -n apps`: Pod 状態や再起動有無を確認する
+- `kubectl get events -A --sort-by=.lastTimestamp | tail -n 20`: 直近イベントから障害兆候や再起動理由を確認する
+
+このコマンドで確認するのはここ:
+
+- `kubectl top pod -n apps`: CPU/Memory がどの Pod で高いかを見る
+- `kubectl get pods -n apps`: `RESTARTS`, `AGE`, `STATUS` を見る
+- `kubectl get events -A --sort-by=.lastTimestamp | tail -n 20`: 直近に何の warning/error が出たかを見る
+
 `kubectl top` が `Metrics API not available` になる場合は、metrics-server 未導入の可能性が高いです。その場合はこの回の失敗ではなく前提不足なので、[handson13.md](handson13.md) を先に完了するか、Grafana と `kubectl get pods` を使って判断練習を進めてください。
 
 ## 完了条件
@@ -62,6 +74,8 @@ kubectl get events -A --sort-by=.lastTimestamp | tail -n 20
 - SLO が利用者影響に近い指標で作られているか
 
 ## よくある失敗
+
+SLO/Alert では `見える値` と `起こすべき通知` を混同しやすいです。観測できるものを全部 Alert にすると運用が壊れるので、利用者影響へつながる指標を優先する視点が重要です。
 
 - CPU 高騰を全部 Alert にしてしまう
 - 成功率やレイテンシよりインフラ内部値ばかり見てしまう

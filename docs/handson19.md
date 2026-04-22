@@ -46,6 +46,20 @@ ls -1 artifacts/postgres-backups
 bash scripts/postgres-restore.sh artifacts/postgres-backups/latest.sql
 ```
 
+各コマンドの目的:
+
+- `kubectl get pods -n infra -l app.kubernetes.io/name=postgres`: backup 対象の PostgreSQL Pod を確認する
+- `bash scripts/postgres-backup.sh`: dump を取得して backup を作成する
+- `ls -1 artifacts/postgres-backups`: backup ファイルが保存された場所と名前を確認する
+- `bash scripts/postgres-restore.sh artifacts/postgres-backups/latest.sql`: 保存済み dump から restore を試す
+
+このコマンドで確認するのはここ:
+
+- `kubectl get pods -n infra -l app.kubernetes.io/name=postgres`: 対象 Pod 名と `STATUS` を見る
+- `bash scripts/postgres-backup.sh`: 保存先ファイル名が出力されるかを見る
+- `ls -1 artifacts/postgres-backups`: timestamp 付き dump と `latest.sql` があるかを見る
+- `bash scripts/postgres-restore.sh ...`: restore 完了メッセージが出るかを見る
+
 ## 完了条件
 
 - dump ファイルが artifacts 配下へ保存されている
@@ -60,6 +74,8 @@ bash scripts/postgres-restore.sh artifacts/postgres-backups/latest.sql
 - backup ファイルの保存先と保持期間が決まっているか
 
 ## よくある失敗
+
+backup は `取れた` だけでは価値が不十分で、`戻せる` ことまで確認して初めて運用になります。特に保存先や時刻が曖昧だと、障害時に使える backup を選べなくなります。
 
 - backup を取っただけで安心し、restore を試していない
 - dump の保存先や取得時刻が曖昧で、障害時に使えない

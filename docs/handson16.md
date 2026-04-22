@@ -50,6 +50,26 @@ curl -kI https://app.localtest.me/
 curl -k https://app.localtest.me/
 ```
 
+各コマンドの目的:
+
+- `bash scripts/install-cert-manager.sh`: 証明書発行を担う cert-manager を導入する
+- `kubectl apply -k manifests/extensions/https`: Issuer、Certificate、HTTPS Ingress などを反映する
+- `kubectl get pods -n cert-manager`: cert-manager 本体が起動しているか確認する
+- `kubectl get issuer,certificate -n apps`: 証明書発行関連 resource が作成されたか確認する
+- `kubectl get secret apps-local-tls -n apps`: 発行済み証明書 Secret が生成されたか確認する
+- `kubectl describe certificate apps-local-tls -n apps`: 証明書の Ready 状態やイベントを確認する
+- `curl -kI https://app.localtest.me/`: HTTPS 入口が応答しているかヘッダだけ確認する
+- `curl -k https://app.localtest.me/`: HTTPS 経由で本文が返るか確認する
+
+このコマンドで確認するのはここ:
+
+- `kubectl get pods -n cert-manager`: `READY`, `STATUS`, `RESTARTS` を見る
+- `kubectl get issuer,certificate -n apps`: `READY` と resource 名を見る
+- `kubectl get secret apps-local-tls -n apps`: Secret が実際に生成されたかを見る
+- `kubectl describe certificate apps-local-tls -n apps`: `Secret Name`, `Conditions`, `Events` を見る
+- `curl -kI https://app.localtest.me/`: HTTP ステータスと応答有無を見る
+- `curl -k https://app.localtest.me/`: 画面本文が返るかを見る
+
 ## 完了条件
 
 - cert-manager の Pod が起動している
@@ -63,6 +83,8 @@ curl -k https://app.localtest.me/
 - HTTPS 化を Ingress 層で扱うことで、アプリ変更を最小化できるか
 
 ## よくある失敗
+
+HTTPS 化では、証明書、Secret、Ingress の 3 つがそろって初めて動きます。どれか 1 つだけ見て安心すると、発行済みなのに参照先が違う、といった事故を見落としやすいです。
 
 - cert-manager 本体を入れずに Certificate だけ apply して待ち続ける
 - host 名と証明書 SAN が一致せず、ブラウザ警告や接続失敗になる

@@ -46,6 +46,21 @@ kubectl describe networkpolicy allow-apps-to-postgres -n infra
 kubectl describe networkpolicy allow-ingress-controller-to-apps -n apps
 ```
 
+各コマンドの目的:
+
+- `kubectl apply -k manifests/extensions/networkpolicy`: NetworkPolicy 群をまとめて反映する
+- `kubectl get networkpolicy -A`: namespace ごとに policy が作成されたか確認する
+- `kubectl describe networkpolicy default-deny -n apps`: apps 側の default deny の中身を確認する
+- `kubectl describe networkpolicy allow-apps-to-postgres -n infra`: DB 接続許可の条件を確認する
+- `kubectl describe networkpolicy allow-ingress-controller-to-apps -n apps`: ingress-nginx から apps への許可条件を確認する
+
+このコマンドで確認するのはここ:
+
+- `kubectl get networkpolicy -A`: namespace ごとに policy が作成されているか、名前が想定どおりかを見る
+- `kubectl describe networkpolicy default-deny -n apps`: `PodSelector` が apps 全体を想定どおり選んでいるか、`Policy Types` が Ingress/Egress のどちらかを見る
+- `kubectl describe networkpolicy allow-apps-to-postgres -n infra`: `PodSelector` が postgres を選んでいるか、`Ingress` の `From` が apps namespace、`Ports` が 5432 になっているかを見る
+- `kubectl describe networkpolicy allow-ingress-controller-to-apps -n apps`: `From` が ingress-nginx 側になっているか、許可先 port が期待どおりかを見る
+
 ## 完了条件
 
 - 3 つの namespace に NetworkPolicy が作成されている
@@ -58,6 +73,8 @@ kubectl describe networkpolicy allow-ingress-controller-to-apps -n apps
 - セキュリティ強化と可用性のバランスを見ながら段階導入できるか
 
 ## よくある失敗
+
+NetworkPolicy は `何を止めるか` より先に `何を生かすか` を言語化しないと壊しやすいです。DNS、Ingress、DB 接続のような基礎通信を先に洗い出してから閉じていく方が安全です。
 
 - default deny を入れた直後に DNS や監視まで止めて原因が分からなくなる
 - 許可元を広く取りすぎて policy の意味が薄くなる

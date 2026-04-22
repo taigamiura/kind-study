@@ -46,6 +46,21 @@ kubectl get certificate -n apps
 kubectl rollout status deployment/user-service -n apps
 ```
 
+各コマンドの目的:
+
+- `bash scripts/cert-expiry-check.sh`: 証明書期限を先に確認する
+- `bash scripts/secret-rollout-restart.sh apps user-service item-service web-app`: Secret 反映のため対象 Deployment を再起動する
+- `kubectl get secret -n infra`: Secret の存在や更新対象を確認する
+- `kubectl get certificate -n apps`: 証明書の Ready や期限確認対象を確認する
+- `kubectl rollout status deployment/user-service -n apps`: rollout restart 後に user-service が正常完了したか確認する
+
+このコマンドで確認するのはここ:
+
+- `bash scripts/cert-expiry-check.sh`: 期限切れに近い証明書がないかを見る
+- `kubectl get secret -n infra`: 対象 Secret 名が存在するかを見る
+- `kubectl get certificate -n apps`: `READY` を見る
+- `kubectl rollout status deployment/user-service -n apps`: rollout が成功で終わるかを見る
+
 ## 完了条件
 
 - 証明書の有効期限と Ready 状態を確認できる
@@ -59,6 +74,8 @@ kubectl rollout status deployment/user-service -n apps
 - 更新後の影響確認が runbook 化されているか
 
 ## よくある失敗
+
+Secret や証明書の更新では、`値を変える` と `反映を確認する` の 2 段階を分けないと事故が起きやすいです。更新対象、再起動対象、確認対象をセットで見るのが基本です。
 
 - Secret を更新したが Pod 再起動を忘れる
 - 証明書の Ready だけ見て、有効期限を見ない
