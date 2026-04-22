@@ -6,7 +6,7 @@ metadata:
 spec:
   description: kind-study applications managed by Argo CD
   sourceRepos:
-    - https://github.com/your-org/kind-study.git
+    - https://github.com/taigamiura/kind-study.git
   destinations:
     - namespace: infra
       server: https://kubernetes.default.svc

@@ -10,6 +10,13 @@ Argo CD による GitOps と、最後の障害訓練を学ぶ。
 - Git が正である状態の価値を理解できる
 - Kubernetes の自己修復や差分管理を体感できる
 
+## この回の前提
+
+- ingress-nginx が導入済みである
+- `manifests/base/argocd/*.yaml` の `repoURL` と `path` を自分の環境に合わせてから apply する
+
+この回は `apply できたら終わり` ではありません。Argo CD はブラウザで差分や同期状態を見ると理解がかなり進みます。
+
 ## この回で先に押さえる用語
 
 - GitOps: Git を正としてクラスタ状態を管理する運用
@@ -49,7 +56,8 @@ Argo CD による GitOps と、最後の障害訓練を学ぶ。
 2. AppProject と Application manifest を読む
 3. Git リポジトリ URL が自分の環境に合っているか確認してから apply する
 4. Argo CD が管理対象をどう分けるかを確認する
-5. 最後に Pod 削除や replica 変更などの障害訓練を試す
+5. ブラウザで Argo CD UI を開き、Application 一覧と同期状態を確認する
+6. 最後に Pod 削除や replica 変更などの障害訓練を試し、Argo CD の見え方を観察する
 
 ## 実行コマンド例
 
@@ -59,15 +67,54 @@ kubectl apply -k manifests/overlays/local/gitops
 kubectl get pods -n gitops
 kubectl get applications -n gitops
 kubectl get appprojects -n gitops
+kubectl get ingress -n gitops
+kubectl get secret argocd-initial-admin-secret -n gitops -o jsonpath='{.data.password}' | base64 -d; echo
 kubectl delete pod -l app.kubernetes.io/name=user-service -n apps
 kubectl scale deployment web-app --replicas=3 -n apps
 kubectl get pods -n apps -w
 ```
 
+ブラウザでは次を開きます。
+
+```text
+http://argocd.localtest.me
+```
+
+login 情報:
+
+- user: admin
+- password: `argocd-initial-admin-secret` から取り出した値
+
+Argo CD に入ったら、最初は次の順で見ます。
+
+1. Application 一覧を開く
+2. `kind-study-infra`, `kind-study-apps`, `kind-study-observability` の 3 つがあるか確認する
+3. `Synced` と `Healthy` の表示を確認する
+4. どれか 1 つを開き、配下 resource がツリーで見えることを確認する
+
+ここで理解してほしいこと:
+
+- `Synced`: Git 上の定義とクラスタ状態が一致している
+- `OutOfSync`: 手作業変更や apply 漏れなどで差分がある
+- `Healthy`: resource は概ね期待どおり動いている
+
+次に drift を体感します。
+
+1. `kubectl scale deployment web-app --replicas=3 -n apps` を実行する
+2. ブラウザで `kind-study-apps` を再表示する
+3. 一時的に `OutOfSync` になるか、selfHeal で戻るかを確認する
+
+さらに `kubectl delete pod -l app.kubernetes.io/name=user-service -n apps` を実行すると、Kubernetes の自己修復と GitOps の差分管理が別物だと分かりやすくなります。
+
+- Pod 削除: Deployment / Kubernetes の自己修復で戻る
+- replica 変更: Git とクラスタの差分なので Argo CD が戻す対象になる
+
 ## 完了条件
 
 - gitops namespace に Argo CD 関連 Pod が起動している
 - AppProject と Application が作成されている
+- `http://argocd.localtest.me` で Argo CD UI を開ける
+- Application 一覧で `Synced` / `OutOfSync` / `Healthy` を読める
 - Pod 削除や replica 変更後の挙動を観察し、自己修復や差分管理を説明できる
 
 ## 実務で見る観点
@@ -79,6 +126,8 @@ kubectl get pods -n apps -w
 
 - repoURL や path を自分の環境に合わせずに apply して同期失敗する
 - Argo CD 本体は動いているが Application が OutOfSync や Missing のまま放置する
+- ブラウザで入れるのに `Applications` 一覧を見ず、何が同期対象か把握しない
+- `OutOfSync` と `Healthy` の違いを混同する
 - 障害訓練で壊した内容と Git 上の正との差分を意識せずに観察してしまう
 
 ## 詰まったときの確認コマンド
@@ -89,6 +138,14 @@ kubectl get appprojects,applications -n gitops
 kubectl describe application kind-study-apps -n gitops
 kubectl describe application kind-study-infra -n gitops
 kubectl logs -n gitops -l app.kubernetes.io/name=argocd-application-controller --tail=100
+```
+
+ブラウザで入れない場合は、次も確認します。
+
+```bash
+kubectl get ingress -n gitops
+kubectl describe ingress argocd-server -n gitops
+kubectl get svc -n gitops
 ```
 
 ## 障害シナリオと復旧の考え方
@@ -162,11 +219,4 @@ GitOps を導入したときのレビューと監査の変化は、変更が Git
 
 ## このシリーズの次
 
-次の超大作として、handson11 以降で以下に拡張できます。
-
-- Kustomize
-- Helm
-- HPA
-- NetworkPolicy
-- CI/CD
-- Blue/Green と Canary
+次は [handson11.md](handson11.md) で Helm を学びます。Argo CD が `Git の状態をどう反映するか` を見たあとに、Helm が `大きなアドオンをどう安全に入れるか` を学ぶとつながりやすいです。

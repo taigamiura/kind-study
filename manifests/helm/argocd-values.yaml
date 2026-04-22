@@ -5,6 +5,8 @@ server:
     annotations:
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
       nginx.ingress.kubernetes.io/backend-protocol: HTTP
+    global:
+      domain: argocd.localtest.me
     hosts:
       - argocd.localtest.me
   extraArgs:
