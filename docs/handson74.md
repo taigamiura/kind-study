@@ -29,6 +29,11 @@
 3. retry、timeout、circuit breaker をどこへ入れるか整理する
 4. `外部依存が落ちた時に全部巻き込まない` 設計を考える
 
+## 確認するとしたらどこを見るか
+
+- 外部依存では timeout、retry、circuit breaker、egress 制御、名前解決のどこが弱いかを見る
+- クラスタ内が正常でも外部 API 側で詰まる経路を見落としていないか確認する
+
 ## 完了条件
 
 - 外部依存が main failure mode になりうると説明できる

@@ -32,6 +32,11 @@ CRD と Operator の仕組みを学ぶ。
 3. `bash scripts/crd-observe.sh` を実行してクラスタ内の CRD を観察する
 4. `desired state を誰が実現するか` を既存 add-on に当てはめる
 
+## このコマンドで確認するのはここ
+
+- `bash scripts/crd-observe.sh`: CRD 一覧、custom resource の種類、controller が管理していそうな resource 名を見る
+- operator 観点では: CRD だけでなく、それを reconcile する controller が存在するかを確認する
+
 ## 完了条件
 
 - CRD と built-in resource の違いを説明できる

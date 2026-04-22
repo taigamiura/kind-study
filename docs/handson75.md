@@ -29,6 +29,11 @@ Platform Engineering と self-service 設計を学ぶ。
 3. template 化、自動化、review 自動化できるものを分ける
 4. golden path がない場合の運用負荷を説明する
 
+## 確認するとしたらどこを見るか
+
+- self-service 設計では golden path、例外経路、所有者、サポート境界が明確かを見る
+- platform team が毎回手作業しないと進まない部分がどこか確認する
+
 ## 完了条件
 
 - self-service の価値を説明できる

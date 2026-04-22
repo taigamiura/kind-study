@@ -30,6 +30,11 @@ Managed Kubernetes とクラウド周辺設計を学ぶ。
 3. kind と EKS / GKE / AKS の責務差を整理する
 4. `network`, `identity`, `ingress`, `egress`, `audit` の観点で本番要件を洗い出す
 
+## 確認するとしたらどこを見るか
+
+- managed Kubernetes では cluster 内より先に VPC、IAM、LB、NAT、DNS など周辺資源を見る
+- private 化した場合に運用経路、監査経路、egress 経路が成立するか確認する
+
 ## 完了条件
 
 - managed Kubernetes でクラウド側へ依存する要素を説明できる

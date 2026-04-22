@@ -32,6 +32,11 @@ PodDisruptionBudget と node drain を学ぶ。
 3. `bash scripts/maintenance-precheck.sh apps` で PDB と Pod 状態を確認する
 4. `障害停止` と `計画停止` の考え方の違いを整理する
 
+## このコマンドで確認するのはここ
+
+- `bash scripts/maintenance-precheck.sh apps`: Pod の `READY/STATUS`、replica 数、PDB の `minAvailable` または `maxUnavailable`、drain 前に止めてはいけない Pod がないかを見る
+- 追加で `kubectl get pdb -n apps` を使う場合: `ALLOWED DISRUPTIONS` が 0 になっていないかを見る
+
 ## 完了条件
 
 - PDB がいつ効き、いつ効かないか説明できる

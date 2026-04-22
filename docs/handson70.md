@@ -31,6 +31,11 @@ OpenTelemetry と log pipeline の実装設計を学ぶ。
 3. log / trace の保存期間とマスキング方針を整理する
 4. 監視コストと観測価値のバランスを言語化する
 
+## 確認するとしたらどこを見るか
+
+- telemetry 設計では collector の入口、sampling、retention、PII マスキングが分かれているかを見る
+- 何でも全部送る設計ではなく、コストと安全性を両立できるか確認する
+
 ## 完了条件
 
 - collector の役割を説明できる

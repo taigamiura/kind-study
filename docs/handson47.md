@@ -30,6 +30,11 @@ Container と Linux の基礎を Kubernetes 文脈で学ぶ。
 3. `PID 1 が signal を受ける` と rollout stop の関係を自分の言葉で説明する
 4. distroless と debug 性の trade-off を整理する
 
+## このコマンドで確認するのはここ
+
+- `bash scripts/container-runtime-check.sh apps`: image 名、実行 user、securityContext、root 前提の設定有無を見る
+- container 挙動で詰まるとき: non-root 実行に耐えるか、書き込み先が root filesystem 依存でないかを見る
+
 ## 完了条件
 
 - container が OS を丸ごと持つわけではないと説明できる

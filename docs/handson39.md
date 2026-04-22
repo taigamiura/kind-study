@@ -32,6 +32,11 @@ ResourceQuota と LimitRange で共有クラスタ運用を学ぶ。
 3. `bash scripts/quota-observe.sh apps` で quota 状態を確認する
 4. requests / limits / quota がどの順で効くか説明する
 
+## このコマンドで確認するのはここ
+
+- `bash scripts/quota-observe.sh apps`: ResourceQuota の `used / hard`、LimitRange の default requests / limits、Pod 側 requests / limits の有無を見る
+- quota が厳しすぎるか考えるとき: `used` が `hard` に近すぎないか、逆に余裕がありすぎないかを見る
+
 ## 完了条件
 
 - ResourceQuota と LimitRange の違いを説明できる

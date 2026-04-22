@@ -30,6 +30,11 @@ logging と tracing の実務的な使い分けを学ぶ。
 3. `どの障害なら logs で深掘りし、どの障害なら tracing が効くか` を分ける
 4. correlation ID があると何が楽になるか言語化する
 
+## このコマンドで確認するのはここ
+
+- `bash scripts/logs-triage.sh apps`: warning / error ログ、対象 Pod 名、直近の失敗メッセージ、相関 ID の有無を見る
+- metrics から logs へ降りるとき: `どの Pod のどの時間帯を見るべきか` が出力から分かるか確認する
+
 ## 完了条件
 
 - metrics、logs、traces の役割分担を説明できる

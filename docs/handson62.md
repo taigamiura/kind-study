@@ -22,6 +22,11 @@ capacity、cost、scaling のレビューを実践する。
 3. `負荷急増時`, `平常時`, `夜間低負荷` の 3 パターンを想定して見直す
 4. cost と可用性の trade-off を文章で説明する
 
+## 確認するとしたらどこを見るか
+
+- capacity review では requests、limits、actual usage、replica 数、node 余力を別々でなく一緒に見る
+- 平常時だけでなく、高負荷時と障害時に headroom が残るか確認する
+
 ## 完了条件
 
 - scaling と capacity の見直し案を出せる

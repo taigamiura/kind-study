@@ -29,6 +29,11 @@ Grafana の dashboard と panel の見方を学ぶ。
 3. `namespace で見る問題`, `pod で見る問題`, `node で見る問題` を分ける
 4. 1 つの panel だけで判断せず、どの panel と組み合わせるか考える
 
+## 確認するとしたらどこを見るか
+
+- namespace dashboard では全体傾向、pod dashboard では特定 Pod の偏り、node dashboard では Node 側資源逼迫を確認する
+- 1 つの panel の瞬間値だけでなく、関連する panel 同士で同じ時間帯に変化しているかを見る
+
 ## 完了条件
 
 - 目的別に dashboard を選べる

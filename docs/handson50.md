@@ -31,6 +31,11 @@ Policy as Code と例外統制を学ぶ。
 3. `bash scripts/policy-gap-check.sh apps` を実行して current deployment を確認する
 4. `何を人の review に任せ, 何を admission で止めるべきか` を整理する
 
+## このコマンドで確認するのはここ
+
+- `bash scripts/policy-gap-check.sh apps`: requests / limits、securityContext、image tag などで policy に引っかかりそうな gap がないかを見る
+- policy 化候補を考えるとき: `毎回 review で見落としやすいもの` が何かを確認する
+
 ## 完了条件
 
 - Policy as Code の必要性を説明できる

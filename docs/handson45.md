@@ -30,6 +30,11 @@ StorageClass、VolumeSnapshot、状態を持つ運用の深掘りを学ぶ。
 3. `どの障害なら snapshot が効き、どの障害なら dump restore が必要か` を分ける
 4. stateful 運用で `保存先`, `世代管理`, `復旧訓練` が必要な理由を説明する
 
+## このコマンドで確認するのはここ
+
+- `bash scripts/storage-observe.sh`: PVC の `STATUS`, `CAPACITY`, `STORAGECLASS`、PV との対応、利用中の StorageClass 名を見る
+- snapshot / restore を考えるとき: どの PVC が重要データを持つか、保存先が 1 系統しかないかを見る
+
 ## 完了条件
 
 - StorageClass と VolumeSnapshot の役割を説明できる

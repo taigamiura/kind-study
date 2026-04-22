@@ -31,6 +31,11 @@ Supply Chain Security と image 信頼性を学ぶ。
 3. `bash scripts/image-inventory.sh apps` を実行して current image を確認する
 4. `誰が build したか`, `何が含まれるか`, `本当にその image か` をどう担保するか整理する
 
+## このコマンドで確認するのはここ
+
+- `bash scripts/image-inventory.sh apps`: image 名、tag / digest、どの Deployment がどの image を使っているかを見る
+- supply chain 観点では: mutable tag を使っていないか、digest で固定されているかを見る
+
 ## 完了条件
 
 - SBOM と vulnerability scan の違いを説明できる

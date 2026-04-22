@@ -30,6 +30,11 @@ Kubernetes 内部構造と control plane の役割を学ぶ。
 3. Deployment 作成から Pod 実行までの control loop を図にする
 4. `Pod が Pending`, `Service に名前解決できない`, `PVC が bound しない` の原因レイヤを分ける
 
+## このコマンドで確認するのはここ
+
+- `bash scripts/cluster-components-check.sh`: kube-system の主要 Pod が `Running` か、apiserver、controller-manager、scheduler、CoreDNS などが見えているか確認する
+- レイヤ切り分けでは: control plane 側の不調か、DNS / storage / node 側の不調かを分ける材料が出ているかを見る
+
 ## 完了条件
 
 - control plane の主要コンポーネントを説明できる

@@ -35,9 +35,15 @@ jobs:
       - name: Validate built manifests
         run: kubeconform -summary -ignore-missing-schemas rendered.yaml
 
+      - name: Render HPA manifests
+        run: kustomize build manifests/extensions/hpa > hpa-rendered.yaml
+
       - name: Validate HPA manifests
-        run: kubeconform -summary -ignore-missing-schemas
-          manifests/extensions/hpa/*.yaml
+        run: kubeconform -summary -ignore-missing-schemas hpa-rendered.yaml
+
+      - name: Render NetworkPolicy manifests
+        run: kustomize build manifests/extensions/networkpolicy >
+          networkpolicy-rendered.yaml
 
       - name: Validate NetworkPolicy manifests
-        run: kubeconform -summary manifests/extensions/networkpolicy/*.yaml
+        run: kubeconform -summary networkpolicy-rendered.yaml

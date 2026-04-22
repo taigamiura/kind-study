@@ -29,6 +29,11 @@ Kubernetes 前提のアプリ実装規約を学ぶ。
 3. rollout と schema migration の安全条件を書く
 4. `再実行しても壊れにくい API` の条件を言語化する
 
+## 確認するとしたらどこを見るか
+
+- アプリ実装では graceful shutdown、readiness、idempotency、connection draining が実装側で担保されているかを見る
+- manifest で補えない部分がコード側に残っていないか確認する
+
 ## 完了条件
 
 - graceful shutdown の必要性を説明できる

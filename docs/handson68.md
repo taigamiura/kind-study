@@ -31,6 +31,11 @@ Terraform と基盤 IaC を学ぶ。
 3. GitOps と Terraform の役割差を整理する
 4. state 管理と plan review の重要性を書き出す
 
+## 確認するとしたらどこを見るか
+
+- Terraform では plan に何が作成・変更・削除されるか、state が何を真実として持つかを見る
+- apply 前に差分が想定どおりか、意図しない destroy が含まれていないか確認する
+
 ## 完了条件
 
 - Kubernetes manifest と Terraform の責務差を説明できる

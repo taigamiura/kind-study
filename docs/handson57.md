@@ -30,6 +30,11 @@
 3. `高 CPU`, `高 latency`, `memory 増加`, `DB 待ち` をどう切り分けるか整理する
 4. p95 / p99 を見る理由を説明する
 
+## このコマンドで確認するのはここ
+
+- `bash scripts/performance-observe.sh apps`: CPU / Memory 使用量、requests / limits、throttling を疑う差、遅い Pod の偏りを見る
+- 性能劣化調査では: 平均値ではなく tail latency や一部 Pod だけ悪い状態がないかを見る
+
 ## 完了条件
 
 - load test と profiling の違いを説明できる

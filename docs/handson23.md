@@ -31,6 +31,11 @@
 3. stable と canary の比較で、どの値を baseline にすべきか考える
 4. 自分の canary 判断基準を 3 行程度で書く
 
+## 確認するとしたらどこを見るか
+
+- メトリクス画面では stable と canary の差分、瞬間値ではなく継続時間、5xx や restart が片側だけ悪化していないかを見る
+- CPU や Memory は単独でなく、利用者影響に近い latency や 5xx と一緒に見て判断する
+
 ## 完了条件
 
 - 観測値を `promote / hold / rollback` に結び付けて説明できる

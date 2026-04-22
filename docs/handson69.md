@@ -29,6 +29,11 @@ Build pipeline と container build engineering を学ぶ。
 3. latest tag を避ける理由を build engineering 観点でも整理する
 4. 環境ごとに build し直さない理由を説明する
 
+## 確認するとしたらどこを見るか
+
+- build pipeline では cache 効率、artifact の再現性、multi-arch 対応、promotion の境界を見る
+- `build できた` だけでなく、同じ artifact を再利用できる流れか確認する
+
 ## 完了条件
 
 - artifact promotion の意味を説明できる

@@ -31,6 +31,11 @@ Authentication、SSO、Audit の実務を学ぶ。
 3. `bash scripts/auth-audit-check.sh` を実行して現在の context と auth can-i の観察ポイントを確認する
 4. `個人ユーザー`, `CI`, `Argo CD`, `運用 bot` をどう分けるべきか整理する
 
+## このコマンドで確認するのはここ
+
+- `bash scripts/auth-audit-check.sh`: 現在の kube context、`auth can-i` の許可/拒否、誰として操作している前提かを見る
+- audit 観点では: 誰の操作か後から追える主体分離になっているか確認する
+
 ## 完了条件
 
 - Authentication と Authorization の違いを説明できる

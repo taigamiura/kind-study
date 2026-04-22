@@ -29,6 +29,11 @@ Node、runtime、eviction、OOM の深掘りを学ぶ。
 3. `Pod 再起動`, `Pending`, `Evicted`, `DiskPressure` の切り分け順を決める
 4. application、kubelet、kernel のどこを見るか整理する
 
+## 確認するとしたらどこを見るか
+
+- Node 問題では Pod 設定だけでなく OOM kill、eviction、disk pressure、inode 枯渇のどれかを見る
+- `Pod が落ちた` を container 側だけの問題だと決めつけていないか確認する
+
 ## 完了条件
 
 - OOM kill と eviction の違いを説明できる

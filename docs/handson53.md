@@ -30,6 +30,11 @@ Autoscaling、capacity planning、cost の考え方を学ぶ。
 3. HPA、VPA、Cluster Autoscaler の役割分担を整理する
 4. `必要な headroom` をなぜ残すべきか言語化する
 
+## このコマンドで確認するのはここ
+
+- `bash scripts/capacity-observe.sh apps`: Pod ごとの current usage、requests / limits、Node 側余力、過大/過小な requests を見る
+- capacity planning では: 平常時と高負荷時で headroom が残るか確認する
+
 ## 完了条件
 
 - HPA、VPA、Cluster Autoscaler の違いを説明できる

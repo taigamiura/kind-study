@@ -32,6 +32,11 @@ affinity、anti-affinity、topology spread で配置設計を学ぶ。
 3. `bash scripts/scheduling-observe.sh apps` で Pod の Node 偏りを確認する
 4. `同じ Node に寄りすぎると何が危ないか` を考える
 
+## このコマンドで確認するのはここ
+
+- `bash scripts/scheduling-observe.sh apps`: 各 Pod の `NODE` を見て、同種 Pod が同じ Node に偏っていないか確認する
+- anti-affinity や topology spread を考えるとき: 3 replica が 1 台に固まっていないか、分散の偏りを見る
+
 ## 完了条件
 
 - affinity / anti-affinity / topology spread の違いを説明できる

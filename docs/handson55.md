@@ -30,6 +30,11 @@ Stateful HA、replication、DB 運用判断を学ぶ。
 3. `単一 StatefulSet`, `replication 構成`, `managed DB` の違いを比較する
 4. DB migration rollback が難しい理由を説明する
 
+## このコマンドで確認するのはここ
+
+- `bash scripts/postgres-ha-review.sh`: PostgreSQL が単一 Pod か、replica や failover 機構があるか、backup 前提がどうなっているかを見る
+- HA 観点では: `冗長化` と `復旧手段` が別に必要だと分かる出力になっているかを見る
+
 ## 完了条件
 
 - StatefulSet と HA の違いを説明できる

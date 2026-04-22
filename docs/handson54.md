@@ -31,6 +31,11 @@ External Secrets と KMS を前提にした Secret 運用を学ぶ。
 3. `bash scripts/secret-source-check.sh apps` を実行して現在の Secret 一覧を見る
 4. `保管`, `配布`, `rotation`, `暗号化` の責務分離を整理する
 
+## このコマンドで確認するのはここ
+
+- `bash scripts/secret-source-check.sh apps`: apps namespace にある Secret 名、原本候補、同期先候補、用途の分離ができているかを見る
+- secret 運用では: Git 管理されていないか、rotation 後にどこへ影響するか整理できるかを見る
+
 ## 完了条件
 
 - Kubernetes Secret 単体の限界を説明できる

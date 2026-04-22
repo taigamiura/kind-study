@@ -36,6 +36,11 @@ RBAC と ServiceAccount で最小権限を設計する。
 3. `bash scripts/rbac-access-check.sh apps app-reader get pods` で権限確認を行う
 4. `必要な権限だけを付ける` と `困ったら広げる` の順番を理解する
 
+## このコマンドで確認するのはここ
+
+- `bash scripts/rbac-access-check.sh apps app-reader get pods`: `yes` / `no` の判定を見て、app-reader が pods を読めるか確認する
+- 同じスクリプトで `create deployments` や `delete pods` を試す場合: 許可されない操作がきちんと拒否されるかを見る
+
 ## 完了条件
 
 - ServiceAccount と人の kubectl 操作の違いを説明できる

@@ -30,6 +30,11 @@
 3. `アプリ deploy` と `クラスタ upgrade` の違いを整理する
 4. deprecation と addon 追従が必要な理由を言語化する
 
+## このコマンドで確認するのはここ
+
+- `bash scripts/cluster-upgrade-precheck.sh`: Node の version 差、NotReady Node の有無、PDB、`CrashLoopBackOff` や `Pending` Pod がないかを見る
+- upgrade 前判断では: 既に不安定な workload がある状態で進めていないか確認する
+
 ## 完了条件
 
 - upgrade 前に何を確認すべきか説明できる
