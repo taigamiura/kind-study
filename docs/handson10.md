@@ -109,6 +109,29 @@ Argo CD に入ったら、最初は次の順で見ます。
 - Pod 削除: Deployment / Kubernetes の自己修復で戻る
 - replica 変更: Git とクラスタの差分なので Argo CD が戻す対象になる
 
+## 初学者が最初につまずきやすいポイント
+
+Argo CD をまだ腹落ちしていない段階だと、`ローカルで YAML を直して kubectl apply したのに、なぜ元に戻るのか` がかなり分かりにくいです。
+
+ここで大事なのは、Argo CD は `ローカルファイル` を見ていないことです。Argo CD が見ているのは `GitHub の main` のような、Application に設定した Git の状態です。
+
+つまり、Argo CD が無い世界では次の流れになります。
+
+1. ローカルで YAML を直す
+2. `kubectl apply` する
+3. クラスタがそのまま更新される
+
+一方で Argo CD がある世界では次の流れになります。
+
+1. ローカルで YAML を直す
+2. `kubectl apply` でクラスタは一瞬変わる
+3. でも Git の正解が古いままなら、Argo CD が差分を見つける
+4. Argo CD が Git の内容へ戻す
+
+この違いが、GitOps の一番大事な感覚です。GitOps では `kubectl apply が最終結果` ではなく、`Git に入った変更が最終結果` になります。
+
+初学者向けに言い換えると、Argo CD は `Git を正解として、クラスタをその正解に保つ監督役` です。ローカルで手直ししただけでは正式な変更とはみなされず、Git に push して初めて新しい正解になります。
+
 ## 完了条件
 
 - gitops namespace に Argo CD 関連 Pod が起動している
@@ -128,6 +151,7 @@ Argo CD に入ったら、最初は次の順で見ます。
 - Argo CD 本体は動いているが Application が OutOfSync や Missing のまま放置する
 - ブラウザで入れるのに `Applications` 一覧を見ず、何が同期対象か把握しない
 - `OutOfSync` と `Healthy` の違いを混同する
+- ローカルで直して `kubectl apply` したのに、Git に push していない変更が戻される理由を理解しない
 - 障害訓練で壊した内容と Git 上の正との差分を意識せずに観察してしまう
 
 ## 詰まったときの確認コマンド
