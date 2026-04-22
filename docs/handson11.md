@@ -45,12 +45,27 @@ Helm でアドオンを安全に導入する。
 - [scripts/install-argocd.sh](../scripts/install-argocd.sh)
 - [scripts/install-metrics-server.sh](../scripts/install-metrics-server.sh)
 
+## この回の前提
+
+- `helm` コマンドがローカルに入っている
+- すべてのスクリプトを一度に実行する必要はない
+
+この回は `Helm をどう使うか` を学ぶ回なので、まず 1 つのアドオンだけを選んで観察すれば十分です。初学者は ingress-nginx か monitoring のどちらか 1 つに絞る方が理解しやすいです。
+
 ## この回で実際にやること
 
 1. values ファイルを開いて、何を上書きしているか確認する
 2. ingress-nginx、monitoring、argocd、metrics-server のインストールスクリプトを読む
 3. まず 1 つだけ Helm で導入し、values の反映結果を確認する
 4. Helm がどの namespace に何を作るかを観察する
+
+おすすめの進め方:
+
+1. `bash scripts/install-ingress-nginx.sh` を実行する
+2. `helm list -A` で `ingress-nginx` release を見る
+3. `helm get values ingress-nginx -n ingress-nginx` で values の反映結果を見る
+
+`bash scripts/install-monitoring.sh` など他のスクリプトは、次の handson で必要になったときに追加で実行すれば十分です。
 
 ## 実行コマンド例
 
@@ -62,11 +77,19 @@ kubectl get pods -n ingress-nginx
 helm get values ingress-nginx -n ingress-nginx
 ```
 
+出力で最低限見ること:
+
+- `helm list -A` に release 名が出る
+- namespace が想定どおりである
+- `helm get values` に自分が values ファイルで変えた設定が反映されている
+
 ## 完了条件
 
 - values ファイルで何を変更しているか説明できる
 - Helm で導入したリソースがどこに作られたか確認できる
 - Helm を使う対象と使わない対象の違いを言葉にできる
+
+この回では `すべてのアドオンを入れ終える` 必要はありません。1 つの chart について `install script -> helm release -> 作成 resource` のつながりを追えれば十分です。
 
 ## 実務で見る観点
 
@@ -76,6 +99,7 @@ helm get values ingress-nginx -n ingress-nginx
 ## よくある失敗
 
 - values で過剰に上書きして将来の chart upgrade を難しくする
+- 4 つの install script を全部同時に実行して、どの結果がどの chart 由来か分からなくなる
 - helm install だけ成功して満足し、実際に何が作られたか見ない
 - 生 YAML の方が読みやすい対象まで Helm 化してしまう
 

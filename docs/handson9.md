@@ -8,6 +8,7 @@ Grafana と監視の基礎を学ぶ。
 
 - Grafana と Prometheus の役割分担を説明できる
 - 最初に見るべきメトリクスを理解できる
+- Grafana をブラウザで開き、dashboard 上で metrics を確認できる
 - 監視が運用にどう効くか説明できる
 
 ## この回で先に押さえる用語
@@ -87,16 +88,11 @@ Prometheus と Grafana の役割を分けて理解することも重要です。
 2. postgres-exporter と ServiceMonitor を apply する
 3. Prometheus が ServiceMonitor を拾える構成になっているか確認する
 4. Grafana にアクセスできる状態を作る
-5. 最初に見るべきメトリクスを一覧で言えるようにする
-6. handson18 の canary 判断で何を見るかを整理する
-7. Grafana での確認順序を説明できるようにする
-8. Grafana で開く dashboard 候補を説明できるようにする
-9. 最終的に何を根拠に go/no-go を決めるか説明できるようにする
-10. 観測結果を短い共有文へ落とせるようにする
-11. promote / rollback 後の追跡監視で何を見るか説明できるようにする
-12. rollback 後に何を証跡として残すべきか説明できるようにする
-13. rollback 後の調査をどう改善アクションへ変えるか説明できるようにする
-14. 再リリース前に何を確認して go を出すか説明できるようにする
+5. ブラウザで Grafana を開き、login できることを確認する
+6. Grafana で `apps` namespace の Pod 状態や CPU / Memory を確認する
+7. PostgreSQL や exporter 系の metrics が見えることを確認する
+8. 最初に見るべきメトリクスを一覧で言えるようにする
+9. handson18 の canary 判断で何を見るかを整理する
 
 ## 実行コマンド例
 
@@ -108,23 +104,69 @@ kubectl apply -f manifests/base/item-service/servicemonitor.yaml
 kubectl get pods -n observability
 kubectl get servicemonitor -A
 kubectl get ingress -n observability
-kubectl top pod -n apps
 ```
+
+ブラウザでは次を開きます。
+
+```text
+http://grafana.localtest.me
+```
+
+login 情報:
+
+```text
+user: admin
+password: admin123
+```
+
+Grafana に入ったら、次の順で確認します。
+
+1. Dashboards から `Kubernetes / Compute Resources / Namespace (Pods)` を開く
+2. namespace filter を `apps` にする
+3. `user-service` と `item-service` の Pod 数、CPU、Memory、restart を見る
+4. 必要なら `Kubernetes / Compute Resources / Pod` を開き、Pod 単位で差を見る
+5. `PostgreSQL` や `exporter` を含む dashboard を探し、postgres-exporter の metrics を見る
+
+この順番にしている理由:
+
+- 最初に namespace 単位で全体を見ると、`どこから深掘るべきか` を決めやすい
+- 次に Pod 単位で見ると、`一部の Pod だけおかしいのか` を切り分けやすい
+- 最後に PostgreSQL や exporter 系を見ると、`API の問題に見えて backend が原因` のケースを拾いやすい
+
+Grafana は `全部の数字を覚えるための画面` ではありません。最初は次の 3 層で見られれば十分です。
+
+1. namespace 全体の健康状態を見る
+2. Pod 個別の偏りを見る
+3. DB や exporter の backend 側を見る
+
+最初に特に見る値:
+
+- Pod 数
+- CPU 使用量
+- Memory 使用量
+- restart 回数
+
+この 4 つを見るだけでも、`落ちているのか`, `重いのか`, `一部だけ壊れているのか` をかなり早く切り分けられます。
+
+画面上の数値変化を見たい場合は、別 terminal で API を数回叩きます。
+
+```bash
+for i in {1..20}; do curl -s http://localhost/api/users > /dev/null; curl -s http://localhost/api/items > /dev/null; done
+```
+
+`kubectl top` は metrics-server が必要なので、この回では必須ではありません。`Metrics API not available` が出ても、Grafana と Prometheus の確認ができていれば handson9 の失敗とは限りません。
 
 ## 完了条件
 
 - observability namespace に監視系 Pod が起動している
 - apps と observability に ServiceMonitor が作成されている
+- Grafana を `http://grafana.localtest.me` で開ける
+- Grafana に login し、`apps` namespace の Pod 状態や CPU / Memory を画面で確認できる
+- postgres-exporter を含む監視対象が Grafana か Prometheus 上で見えていることを確認できる
 - Grafana の入口と、見るべき最初のメトリクスを説明できる
-- canary 判断で最低限見る指標を [release-metrics.md](release-metrics.md) と結びつけて説明できる
-- Grafana でどの順番に確認するかを [grafana-canary-checklist.md](grafana-canary-checklist.md) と結びつけて説明できる
-- Grafana でどの dashboard を開けばよいかを [grafana-dashboard-guide.md](grafana-dashboard-guide.md) と結びつけて説明できる
-- 観測結果をどう判断記録へ落とすかを [release-decision-template.md](release-decision-template.md) と結びつけて説明できる
-- 観測結果をどう短く共有するかを [release-communication-template.md](release-communication-template.md) と結びつけて説明できる
-- 判断後に何を追跡監視するかを [release-followup-checklist.md](release-followup-checklist.md) と結びつけて説明できる
-- rollback 後に何を残して次の調査へつなぐかを [rollback-investigation-template.md](rollback-investigation-template.md) と結びつけて説明できる
-- rollback 後の調査結果をどう優先度つき改善へ落とすかを [preventive-action-template.md](preventive-action-template.md) と結びつけて説明できる
-- 再リリース前に何を満たせばよいかを [rerelease-readiness-checklist.md](rerelease-readiness-checklist.md) と結びつけて説明できる
+- [grafana-dashboard-guide.md](grafana-dashboard-guide.md) を見ながら、最初に開く dashboard を 1 つ以上言える
+- `namespace -> pod -> backend` の順で見る理由を説明できる
+- handson18 で canary 判断に metrics がどうつながるかを説明できる
 
 ## 実務で見る観点
 
@@ -135,6 +177,8 @@ kubectl top pod -n apps
 
 - Grafana に入れば監視できていると思い、Prometheus や ServiceMonitor の状態を見ない
 - exporter は動いているが、Prometheus 側で scrape できていないことを見落とす
+- Grafana は開けたが、どの dashboard をどう絞るか分からず観測できない
+- `kubectl top` が動かないことを monitoring 導入失敗だと誤解する
 - ダッシュボードを見るだけで、異常時にどの指標から見るか決めていない
 
 ## 詰まったときの確認コマンド
@@ -148,18 +192,28 @@ kubectl describe servicemonitor postgres-exporter -n observability
 kubectl logs -n observability -l app.kubernetes.io/name=postgres-exporter --tail=100
 ```
 
+Grafana が開かない場合は、次も確認します。
+
+```bash
+kubectl get ingress -n observability
+kubectl get svc -n observability
+kubectl describe ingress kube-prometheus-stack-grafana -n observability
+```
+
 ## 障害シナリオと復旧の考え方
 
 想定シナリオ:
 
 - Grafana は見えるが、見たいメトリクスが表示されない
 - exporter は動いているのに Prometheus に取り込まれない
+- Grafana には入れるが、dashboard のどこを見ればよいか分からない
 - 監視はあるが、どこから見始めるべきか分からない
 
 復旧の考え方:
 
 - 表示の問題か、収集の問題か、公開の問題かを分けて考える
 - ServiceMonitor、Service、exporter Pod、Prometheus 対象選択を順に確認する
+- dashboard 名、namespace filter、panel 単位の見方を切り分ける
 - まず restart、latency、error rate など影響が大きい指標から見る
 
 ## レビュー観点と運用判断ポイント

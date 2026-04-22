@@ -21,6 +21,7 @@ Secret と TLS 証明書の更新運用を学ぶ。
 ## 対応ファイル
 
 - [secret-rotation-checklist.md](secret-rotation-checklist.md)
+- [postgres-secret-rotation-runbook.md](postgres-secret-rotation-runbook.md)
 - [manifests/base/postgres/secret.yaml](../manifests/base/postgres/secret.yaml)
 - [manifests/extensions/https/apps-certificate.yaml](../manifests/extensions/https/apps-certificate.yaml)
 - [scripts/cert-expiry-check.sh](../scripts/cert-expiry-check.sh)
@@ -31,8 +32,9 @@ Secret と TLS 証明書の更新運用を学ぶ。
 1. どの Secret がどの workload に効くかを整理する
 2. `bash scripts/cert-expiry-check.sh` で証明書状態を確認する
 3. Secret を更新した想定で、再起動すべき Deployment を洗い出す
-4. `bash scripts/secret-rollout-restart.sh` を使って rollout restart を実施する
-5. 更新後に Pod、Secret、Certificate の状態を確認する
+4. [postgres-secret-rotation-runbook.md](postgres-secret-rotation-runbook.md) を読み、`Secret 更新` と `DB 内認証変更` の違いを整理する
+5. `bash scripts/secret-rollout-restart.sh` を使って rollout restart を実施する
+6. 更新後に Pod、Secret、Certificate の状態を確認する
 
 ## 実行コマンド例
 

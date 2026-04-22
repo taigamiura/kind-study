@@ -10,6 +10,13 @@ HPA で自動スケールを学ぶ。
 - metrics-server が必要な理由を理解できる
 - 手動スケールと自動スケールの違いを説明できる
 
+## この回の前提
+
+- `kubectl top` は Prometheus や Grafana ではなく metrics-server に依存する
+- [handson9.md](handson9.md) で monitoring を入れていても、それだけでは `kubectl top` は動かない
+
+ここを混同すると、`Metrics API not available` を monitoring 導入失敗だと誤解しやすいです。この回では、その誤解を解消することも重要な学習ポイントです。
+
 ## この回で先に押さえる用語
 
 - HPA: metrics を見て Pod 数を自動調整する仕組み
@@ -34,6 +41,12 @@ HPA で自動スケールを学ぶ。
 4. CPU 指標が見える状態か確認する
 5. HPA が増減させる対象と限界値を読み取る
 
+手順の意味:
+
+- 1 の前は `kubectl top` が失敗しても不自然ではない
+- 1 の後に metrics-server Pod が起動してから `kubectl top` を試す
+- そのあとで HPA の状態を読むと、依存関係が理解しやすい
+
 ## 実行コマンド例
 
 ```bash
@@ -45,10 +58,20 @@ kubectl describe hpa user-service -n apps
 kubectl describe hpa item-service -n apps
 ```
 
+最初の 2 つの確認ポイント:
+
+```bash
+kubectl get pods -n kube-system | grep metrics-server
+kubectl top pods -n apps
+```
+
+ここで `kubectl top` が通って初めて、HPA が CPU 指標を参照できる前提が整ったと考えます。
+
 ## 完了条件
 
 - metrics-server が動作している
 - apps namespace に HPA が作成されている
+- `kubectl top pods -n apps` が通る
 - minReplicas、maxReplicas、target CPU utilization を説明できる
 
 ## 実務で見る観点
@@ -59,6 +82,7 @@ kubectl describe hpa item-service -n apps
 ## よくある失敗
 
 - metrics-server 未導入のまま HPA を apply して動かない
+- handson9 で Grafana を見られたので `kubectl top` も使えるはずだと誤解する
 - requests 未設定や不適切設定で HPA 判断が不安定になる
 - maxReplicas を大きくしただけで性能問題が解決すると考える
 

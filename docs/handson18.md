@@ -118,6 +118,12 @@ bash scripts/mesh-canary-smoke-test.sh 50
 14. rollback した場合は [preventive-action-template.md](preventive-action-template.md) に再発防止アクションを残す
 15. 再度 canary を出す前に `bash scripts/mesh-rerelease-precheck.sh` と [rerelease-readiness-checklist.md](rerelease-readiness-checklist.md) で再リリース可否を確認する
 
+補足:
+
+- `kubectl top` は metrics-server が前提です
+- metrics-server 未導入なら、Grafana、Pod 状態、restart 回数、5xx、レイテンシ観測を優先してください
+- canary 判断の本質は `top の数値を見ること` ではなく、stable と canary の差を複数指標で比較することです
+
 ## 本番前チェックリスト
 
 - sidecar 未注入 Pod が残っていない

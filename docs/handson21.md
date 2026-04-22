@@ -10,6 +10,13 @@ SLO、Alert、運用閾値の作り方を学ぶ。
 - レイテンシ、エラー率、可用性に対して最小の SLO を置ける
 - Alert を増やすより、意味のある閾値を絞る発想を持てる
 
+## この回の前提
+
+- `kubectl top` を使うなら [handson13.md](handson13.md) の metrics-server 導入まで終わっている
+- まだ metrics-server を入れていない場合は、Grafana や Pod 状態確認を主に使って考えてよい
+
+この回の本質は `CPU 数値を取ること` ではなく、`何を Alert にし、何を dashboard 観測に留めるか` を考えることです。
+
 ## この回で先に押さえる用語
 
 - SLI: 測りたい指標
@@ -39,6 +46,8 @@ kubectl top pod -n apps
 kubectl get pods -n apps
 kubectl get events -A --sort-by=.lastTimestamp | tail -n 20
 ```
+
+`kubectl top` が `Metrics API not available` になる場合は、metrics-server 未導入の可能性が高いです。その場合はこの回の失敗ではなく前提不足なので、[handson13.md](handson13.md) を先に完了するか、Grafana と `kubectl get pods` を使って判断練習を進めてください。
 
 ## 完了条件
 

@@ -10,6 +10,13 @@ web-app と API の分離構成を学ぶ。
 - web-app を Ingress 配下で公開する流れを理解できる
 - クライアントから API を呼ぶ経路を説明できる
 
+## この回の前提
+
+- [handson6.md](handson6.md) まで進めており、`user-service` と `item-service` の Pod と Service が apps namespace に存在している
+- ingress-nginx が導入済みで、`http://localhost/` へアクセスできる状態である
+
+この前提が欠けていると、web-app の HTML は見えても `/api/users` や `/api/items` は 404 や 503 になることがあります。これは web-app の失敗というより、API 側の入口や backend がまだ整っていない状態です。
+
 ## この回で先に押さえる用語
 
 - Deployment: アプリの配備と更新を管理する仕組み
@@ -56,6 +63,8 @@ web-app と API の分離構成を学ぶ。
 4. ブラウザまたは curl でトップページへアクセスし、画面が返ることを確認する
 5. web-app から /api/users と /api/items を呼ぶ構成になっていることを確認する
 
+この回で最優先の確認は `http://localhost/` で HTML が返ることです。`/api/users` と `/api/items` の成功応答は、API 側 Service、Ingress、Pod の Ready がそろって初めて成立します。
+
 ## 実行コマンド例
 
 ```bash
@@ -74,6 +83,11 @@ curl http://localhost/
 - web-app Ingress が作成されている
 - http://localhost/ へアクセスして HTML が返る
 - HTML 内で /api/users と /api/items を呼んでいることを説明できる
+
+次が起きた場合の見方も言えるとなおよいです。
+
+- トップページは表示されるが `/api/users` は 503 になる
+- これは `web-app が壊れた` のでなく `API 側の入口か backend が未整備` の可能性が高い
 
 ## 実務で見る観点
 
@@ -97,6 +111,12 @@ curl http://localhost/ | head -n 40
 curl http://localhost/api/users
 curl http://localhost/api/items
 ```
+
+読み方の目安:
+
+- `http://localhost/` が返る: web-app 配信と web-app Ingress は概ね成功
+- `/api/users` が 404: API 用 Ingress がまだ無いか path が一致していない可能性がある
+- `/api/users` が 503: API 用 Ingress はあるが backend Pod や Service 経路が不健康な可能性がある
 
 ## 障害シナリオと復旧の考え方
 
