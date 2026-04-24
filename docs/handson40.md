@@ -32,6 +32,10 @@ PodDisruptionBudget と node drain を学ぶ。
 3. `bash scripts/maintenance-precheck.sh apps` で PDB と Pod 状態を確認する
 4. `障害停止` と `計画停止` の考え方の違いを整理する
 
+## この回だけで押さえる整理
+
+PDB は `障害を防ぐ仕組み` ではなく `計画停止を安全にする仕組み` です。drain と rollout restart と障害停止の違いを分けて言えるようになると、この回の理解が安定します。
+
 ## このコマンドで確認するのはここ
 
 - `bash scripts/maintenance-precheck.sh apps`: Pod の `READY/STATUS`、replica 数、PDB の `minAvailable` または `maxUnavailable`、drain 前に止めてはいけない Pod がないかを見る

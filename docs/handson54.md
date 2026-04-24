@@ -31,6 +31,10 @@ External Secrets と KMS を前提にした Secret 運用を学ぶ。
 3. `bash scripts/secret-source-check.sh apps` を実行して現在の Secret 一覧を見る
 4. `保管`, `配布`, `rotation`, `暗号化` の責務分離を整理する
 
+## この回だけで押さえる整理
+
+Secret 運用では、`値を持っている` ことと `安全に管理できている` ことを分けて考える必要があります。この回では、原本の保管、クラスタへの同期、Pod への配布、rotation 後の確認という流れを 1 本で説明できれば十分です。
+
 ## このコマンドで確認するのはここ
 
 - `bash scripts/secret-source-check.sh apps`: apps namespace にある Secret 名、原本候補、同期先候補、用途の分離ができているかを見る
@@ -61,6 +65,12 @@ External Secrets と KMS を前提にした Secret 運用を学ぶ。
 - Secret は `どう保存するか` と `どう渡すか` を分けて考えるべきである
 - External Secrets は multi-team 運用と rotation に強い
 - KMS は鍵管理の基盤であり、運用設計とセットで考える必要がある
+
+## 学ぶポイントの解説
+
+Kubernetes Secret は利用先に値を渡す仕組みとしては便利ですが、原本管理、承認、監査、rotation の中心に置くには弱い場面があります。External Secrets を使うと、原本を Secret Manager 側へ寄せたまま、クラスタには必要な形だけ同期できるため、責務分離が明確になります。
+
+また、KMS を使っていても運用が安全になるとは限りません。誰が原本を更新し、いつ同期され、どの Pod へ影響し、どこで反映確認するかまで設計できて初めて、安全な Secret 運用になります。
 
 ## 詰まったときの確認ポイント
 

@@ -180,6 +180,10 @@ for i in {1..20}; do curl -s http://app.localtest.me/api/users > /dev/null; curl
 
 `kubectl top` は metrics-server が必要なので、この回では必須ではありません。`Metrics API not available` が出ても、Grafana と Prometheus の確認ができていれば handson9 の失敗とは限りません。
 
+## この回だけで押さえる整理
+
+監視の基礎では、Grafana を見ること自体より `何を異常の入口として見るか` が重要です。Prometheus が数値を集め、Grafana がその見方を提供し、metrics-server は別用途だと分けて説明できるようになることが、この回の中心です。
+
 ## 完了条件
 
 - observability namespace に監視系 Pod が起動している

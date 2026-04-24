@@ -31,6 +31,12 @@ Policy as Code と例外統制を学ぶ。
 3. `bash scripts/policy-gap-check.sh apps` を実行して current deployment を確認する
 4. `何を人の review に任せ, 何を admission で止めるべきか` を整理する
 
+## この回だけで押さえる整理
+
+Policy as Code の目的は `何でも自動で止める` ことではありません。人の review では毎回見落としやすいものを、Admission で機械的に守ることです。逆に、文脈判断が必要なものまで全部禁止すると、現場が回らず例外だらけになります。
+
+考え方は `即禁止`, `警告`, `人の review`, `期限付き例外` の 4 段階に分けると整理しやすいです。例えば privileged や requests / limits 未設定は Admission で止めやすい一方、業務理由のある一時例外は期限付きで管理する方が現実的です。
+
 ## このコマンドで確認するのはここ
 
 - `bash scripts/policy-gap-check.sh apps`: requests / limits、securityContext、image tag などで policy に引っかかりそうな gap がないかを見る
@@ -57,6 +63,16 @@ Policy as Code と例外統制を学ぶ。
 - 例外管理がなく抜け道だらけになる
 
 ## 学ぶポイント
+
+- Policy as Code は review の代替ではなく、繰り返し守るべき最低線を自動化する仕組みである
+- 何でも禁止すると強いのではなく、禁止・警告・例外の使い分けが重要である
+- 例外運用を期限と責任者なしで放置すると、policy は形だけになる
+
+## 学ぶポイントの解説
+
+人の review は文脈判断に強いですが、毎回同じチェックを漏れなく繰り返すのは苦手です。そこで Policy as Code を使い、requests / limits、non-root、privileged のような `毎回守るべき最低線` を機械に持たせます。これにより、review はより設計的な論点へ集中できます。
+
+一方で、Admission は強力すぎると運用を止めます。だからこそ `本当に止めるべきものか`, `警告で十分か`, `例外の出口があるか` を設計しないと、現場では policy を無効化したくなります。このバランス感覚まで含めて理解できると、この回のゴールに届きます。
 
 
 ## 詰まったときの確認ポイント

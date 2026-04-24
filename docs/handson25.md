@@ -29,6 +29,10 @@ Grafana の dashboard と panel の見方を学ぶ。
 3. `namespace で見る問題`, `pod で見る問題`, `node で見る問題` を分ける
 4. 1 つの panel だけで判断せず、どの panel と組み合わせるか考える
 
+## この回だけで押さえる整理
+
+dashboard が多いときは、`どの粒度の画面で何を判断するか` を先に分けると迷いにくくなります。namespace は全体傾向、pod は個別深掘り、node は基盤側切り分けという役割差をこの 1 回で説明できれば十分です。
+
 ## 確認するとしたらどこを見るか
 
 - namespace dashboard では全体傾向、pod dashboard では特定 Pod の偏り、node dashboard では Node 側資源逼迫を確認する

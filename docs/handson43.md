@@ -32,6 +32,10 @@ Pod Security、securityContext、admission の基礎を学ぶ。
 3. `bash scripts/security-posture-check.sh apps` で securityContext の有無を確認する
 4. `なぜ admission で止める必要があるのか` を考える
 
+## この回だけで押さえる整理
+
+Pod Security は `後で気を付ける` より `危ないものを最初から通さない` 発想で理解すると整理しやすいです。securityContext、namespace 基準、admission の 3 層で止める考え方が持てれば十分です。
+
 ## このコマンドで確認するのはここ
 
 - `bash scripts/security-posture-check.sh apps`: `runAsNonRoot`、`readOnlyRootFilesystem`、`allowPrivilegeEscalation`、capabilities drop の有無を見る

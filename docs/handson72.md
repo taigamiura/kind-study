@@ -29,6 +29,10 @@ Node、runtime、eviction、OOM の深掘りを学ぶ。
 3. `Pod 再起動`, `Pending`, `Evicted`, `DiskPressure` の切り分け順を決める
 4. application、kubelet、kernel のどこを見るか整理する
 
+## この回だけで押さえる整理
+
+Node 障害を調べるときは、`Pod が落ちた` をそのままアプリ問題へ結び付けないことが重要です。この回では OOM kill、eviction、disk pressure、inode 枯渇、runtime 不調の違いを分けて説明できれば、調査入口として十分です。
+
 ## 確認するとしたらどこを見るか
 
 - Node 問題では Pod 設定だけでなく OOM kill、eviction、disk pressure、inode 枯渇のどれかを見る
@@ -45,6 +49,14 @@ Node、runtime、eviction、OOM の深掘りを学ぶ。
 - Pod 設定だけ見て Node 原因を見落としていないか
 - disk 容量だけでなく inode 枯渇を意識できるか
 - kubelet / runtime / kernel の責務差を理解しているか
+
+## よくある失敗
+
+この回の失敗は、Node 側の障害を `Kubernetes が不安定` の一言で片付けると起きやすいです。背景には `manifest の外にある OS / runtime / kernel の責務` を切り分けていないことがあります。
+
+- OOMKilled と Evicted を同じものとして扱う
+- disk 使用率だけ見て inode 枯渇を見落とす
+- kubelet と kernel のどちらが悪いか分けずに調査する
 
 
 ## 詰まったときの確認ポイント

@@ -61,6 +61,10 @@ kubectl describe networkpolicy allow-ingress-controller-to-apps -n apps
 - `kubectl describe networkpolicy allow-apps-to-postgres -n infra`: `PodSelector` が postgres を選んでいるか、`Ingress` の `From` が apps namespace、`Ports` が 5432 になっているかを見る
 - `kubectl describe networkpolicy allow-ingress-controller-to-apps -n apps`: `From` が ingress-nginx 側になっているか、許可先 port が期待どおりかを見る
 
+## この回だけで押さえる整理
+
+NetworkPolicy では、許可したい通信経路を先に言語化してから YAML を読むことが重要です。`誰から誰へどの port を許可するか` を ingress と egress で分けて説明できると、この回の理解が安定します。
+
 ## 完了条件
 
 - 3 つの namespace に NetworkPolicy が作成されている

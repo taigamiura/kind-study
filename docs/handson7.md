@@ -98,6 +98,10 @@ curl http://app.localtest.me/
 - `curl -I http://app.localtest.me/`: ステータスコードが 200 系か 30x かを確認する
 - `curl http://app.localtest.me/`: HTML が返り、期待した文言や script が含まれるか確認する
 
+## この回だけで押さえる整理
+
+web-app と API を分ける理由は、見た目の役割分担だけでなく、変更頻度、スケールの仕方、障害切り分けを分けられることにあります。HTML を返す入口と JSON を返す API を別責務として説明できると、この回は実務につながります。
+
 ## 完了条件
 
 - web-app Pod と Service が apps namespace に作成されている

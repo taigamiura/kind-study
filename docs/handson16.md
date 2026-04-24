@@ -70,6 +70,10 @@ curl -k https://app.localtest.me/
 - `curl -kI https://app.localtest.me/`: HTTP ステータスと応答有無を見る
 - `curl -k https://app.localtest.me/`: 画面本文が返るかを見る
 
+## この回だけで押さえる整理
+
+HTTPS 化では、証明書を取ることより `発行`, `保存`, `Ingress 反映`, `更新確認` の流れを追えることが大切です。cert-manager、Certificate、Secret、HTTPS 入口の役割差を説明できれば、この回のゴールに届きます。
+
 ## 完了条件
 
 - cert-manager の Pod が起動している

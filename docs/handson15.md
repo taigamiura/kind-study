@@ -69,6 +69,10 @@ kubeconform -summary manifests/extensions/networkpolicy/*.yaml
 - `kubeconform ... manifests/extensions/hpa/*.yaml`: HPA manifest 単体が schema 的に妥当かを見る
 - `kubeconform ... manifests/extensions/networkpolicy/*.yaml`: NetworkPolicy manifest 単体が schema 的に妥当かを見る
 
+## この回だけで押さえる整理
+
+CI/CD で重要なのは、`apply 前にどこまで壊れ方を検出するか` です。render error と schema error を分け、ローカル再現と GitHub Actions の役割差を説明できれば、この回のポイントを押さえています。
+
 ## 完了条件
 
 - workflow が何を検証しているか順番に説明できる

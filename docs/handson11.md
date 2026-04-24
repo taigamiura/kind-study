@@ -184,6 +184,10 @@ helm get values ingress-nginx -n ingress-nginx
 
 ここを区別できると、`Chart 側のデフォルトが悪いのか`, `自分の values 上書きが悪いのか` を切り分けやすくなります。
 
+## この回だけで押さえる整理
+
+Helm で重要なのは、Chart、Release、values の 3 つを混ぜないことです。` upstream の複雑なアドオンを、values で上書きしながら再現可能に入れる仕組み ` として説明できるようになることが、この回のポイントです。
+
 ## 完了条件
 
 - Chart、values、Release の違いを説明できる

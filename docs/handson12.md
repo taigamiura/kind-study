@@ -76,6 +76,10 @@ kubectl apply -k manifests/overlays/local/apps
 - `kubectl diff -k ...`: 今のクラスタとの差分を見る
 - `kubectl apply -k ...`: build した結果をクラスタへ反映する
 
+## この回だけで押さえる整理
+
+Kustomize の要点は、YAML をコピペで増やすのでなく、base と overlay で差分だけを管理することです。build すると何が出るのか、apply するとどこに反映されるのかを分けて説明できれば、この回の理解は十分です。
+
 ## 完了条件
 
 - local overlay が base を束ねた最終構成だと理解できる

@@ -37,6 +37,10 @@ kubectl get pods -A -o wide
 kubectl describe node study-k8s-worker
 ```
 
+## この回だけで押さえる整理
+
+この回では、Kubernetes を `1 台の Docker ホスト` と見ないことが最重要です。control plane と worker の役割差、Pod が Node に載ること、Node 障害がその上の Pod へ波及することを説明できれば、この回のゴールに届きます。
+
 このコマンドで確認するのはここ:
 
 - `kubectl get nodes -o wide`: `ROLES`, `STATUS`, `VERSION`, `INTERNAL-IP` を見て control plane と worker の役割を確認する

@@ -30,6 +30,10 @@
 3. `アプリ deploy` と `クラスタ upgrade` の違いを整理する
 4. deprecation と addon 追従が必要な理由を言語化する
 
+## この回だけで押さえる整理
+
+cluster upgrade はアプリ deploy より広い変更で、control plane、node、addon、API 互換を一緒に見ます。version を上げる前提条件と戻し方まで含めて話せると、この回は実務で使える理解になります。
+
 ## このコマンドで確認するのはここ
 
 - `bash scripts/cluster-upgrade-precheck.sh`: Node の version 差、NotReady Node の有無、PDB、`CrashLoopBackOff` や `Pending` Pod がないかを見る

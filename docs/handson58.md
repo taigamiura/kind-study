@@ -29,6 +29,10 @@ Platform Team、SRE、運用当番の実務を学ぶ。
 3. on-call と incident commander の違いを整理する
 4. error budget が開発速度の意思決定にどう効くか説明する
 
+## この回だけで押さえる整理
+
+本番運用は技術だけでなく、誰が持ち、誰が判断し、誰が一次対応するかで成立します。この回では、Platform Team、application team、on-call、意思決定者の責任境界を分けて説明できることがポイントです。
+
 ## 確認するとしたらどこを見るか
 
 - team 設計では `誰が運用を持つか`, `誰が platform を持つか`, `夜間一次対応が誰か` を見る

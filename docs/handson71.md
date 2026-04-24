@@ -29,6 +29,10 @@ Kubernetes 前提のアプリ実装規約を学ぶ。
 3. rollout と schema migration の安全条件を書く
 4. `再実行しても壊れにくい API` の条件を言語化する
 
+## この回だけで押さえる整理
+
+Kubernetes で壊れにくい運用を作るには、platform 設定だけでなくアプリ実装側も前提を守る必要があります。この回では graceful shutdown、readiness、idempotency、schema change 互換の 4 点を一緒に語れるようになることがポイントです。
+
 ## 確認するとしたらどこを見るか
 
 - アプリ実装では graceful shutdown、readiness、idempotency、connection draining が実装側で担保されているかを見る
@@ -45,6 +49,14 @@ Kubernetes 前提のアプリ実装規約を学ぶ。
 - Pod 停止時にリクエストを壊していないか
 - migration が新旧共存を壊していないか
 - retry で二重処理が起きないか
+
+## よくある失敗
+
+この回の失敗は、Kubernetes 側設定を整えればアプリ実装の弱さを吸収できると思うと起きやすいです。背景には `rollout の安全性はアプリ実装にも依存する` という理解不足があります。
+
+- readiness が通ることと安全停止を同一視する
+- migration が新旧共存を壊しても rollout で吸収できると思う
+- retry 前提なのに idempotency を設計しない
 
 
 ## 詰まったときの確認ポイント

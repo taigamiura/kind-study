@@ -61,6 +61,10 @@ kubectl get events -A --sort-by=.lastTimestamp | tail -n 20
 
 `kubectl top` が `Metrics API not available` になる場合は、metrics-server 未導入の可能性が高いです。その場合はこの回の失敗ではなく前提不足なので、[handson13.md](handson13.md) を先に完了するか、Grafana と `kubectl get pods` を使って判断練習を進めてください。
 
+## この回だけで押さえる整理
+
+SLO と Alert 設計では、利用者影響に近い指標を選び、通知して行動が必要な条件だけを Alert にすることが重要です。閾値を決めることと運用判断を作ることを分けて説明できれば、この回の理解は十分です。
+
 ## 完了条件
 
 - 1 つ以上の SLO を文章で書ける

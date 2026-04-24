@@ -29,6 +29,10 @@ Platform Engineering と self-service 設計を学ぶ。
 3. template 化、自動化、review 自動化できるものを分ける
 4. golden path がない場合の運用負荷を説明する
 
+## この回だけで押さえる整理
+
+Platform Engineering は、platform team が全部やることではなく、開発者が安全な標準経路を自力で選べるようにすることです。この回では golden path、例外経路、ownership、self-service の境界を説明できればゴール達成です。
+
 ## 確認するとしたらどこを見るか
 
 - self-service 設計では golden path、例外経路、所有者、サポート境界が明確かを見る
@@ -45,6 +49,14 @@ Platform Engineering と self-service 設計を学ぶ。
 - platform team がチケット処理だけで疲弊していないか
 - 標準パターンが開発者に見えているか
 - 例外運用が常態化していないか
+
+## よくある失敗
+
+この回の失敗は、self-service を `review なしで自由にやれること` と誤解すると起きやすいです。背景には `標準化と例外統制を同時に設計する` 視点の不足があります。
+
+- platform team が手作業を抱え込んだままになる
+- golden path を作らず個別相談で回そうとする
+- self-service 化で review や guardrail が不要になると思う
 
 
 ## 詰まったときの確認ポイント

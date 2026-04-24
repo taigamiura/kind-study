@@ -58,6 +58,10 @@ kubectl get events -A --sort-by=.lastTimestamp | tail -n 30
 - `kubectl get pods -A`: どの namespace で `CrashLoopBackOff`, `Pending`, `Error` が出ているかを見る
 - `kubectl get events -A --sort-by=.lastTimestamp | tail -n 30`: 直近の異常イベントとその namespace を見る
 
+## この回だけで押さえる整理
+
+障害初動では、証跡収集、影響把握、共有、後続の postmortem までが 1 本でつながります。この回では、初動で何を残すかが後からの復旧力と改善力を左右すると説明できればゴール達成です。
+
 ## 完了条件
 
 - 障害初動の確認順序を説明できる

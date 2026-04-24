@@ -86,6 +86,10 @@ kubectl get pvc -n infra
 - `kubectl describe statefulset postgres -n infra`: `Replicas`, `Pod Template`, `Volume Claims`, `Events` を見る
 - `kubectl get pod -w -n infra`: 削除後に postgres-0 が再作成される流れを追う
 
+## この回だけで押さえる整理
+
+PostgreSQL の永続化で重要なのは、Pod の再作成とデータ保持を分けて考えることです。StatefulSet、PVC、安定した Pod 名の 3 つがなぜ必要かを Deployment と比較して説明できれば、この回の理解は十分です。
+
 ## 完了条件
 
 - infra namespace に postgres-0 が Running になっている

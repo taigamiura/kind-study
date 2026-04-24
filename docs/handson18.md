@@ -89,6 +89,10 @@ kubectl describe virtualservice user-service-canary -n apps
 - `kubectl describe peerauthentication apps-strict -n apps`: `mtls.mode` と `Events` を見る
 - `kubectl describe virtualservice user-service-canary -n apps`: host、subset、weight を見る
 
+## この回だけで押さえる整理
+
+mTLS の STRICT 化と canary release は、`安全に強める` と `安全に切り替える` を同時に扱う回です。VirtualService、PeerAuthentication、観測、rollback を 1 本の流れで語れるようになることが、この回の中心です。
+
 ## 完了条件
 
 - `user-service-canary` の Pod と Service が作成されている

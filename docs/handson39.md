@@ -32,6 +32,10 @@ ResourceQuota と LimitRange で共有クラスタ運用を学ぶ。
 3. `bash scripts/quota-observe.sh apps` で quota 状態を確認する
 4. requests / limits / quota がどの順で効くか説明する
 
+## この回だけで押さえる整理
+
+quota と limitrange は `制限を入れること` が目的ではなく、共有クラスタで公平性と事故防止を両立するために使います。namespace 総量の統制と container ごとの書き忘れ防止を分けて説明できれば十分です。
+
 ## このコマンドで確認するのはここ
 
 - `bash scripts/quota-observe.sh apps`: ResourceQuota の `used / hard`、LimitRange の default requests / limits、Pod 側 requests / limits の有無を見る

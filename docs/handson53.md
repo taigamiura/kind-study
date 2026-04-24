@@ -30,6 +30,10 @@ Autoscaling、capacity planning、cost の考え方を学ぶ。
 3. HPA、VPA、Cluster Autoscaler の役割分担を整理する
 4. `必要な headroom` をなぜ残すべきか言語化する
 
+## この回だけで押さえる整理
+
+autoscaling を理解するには、Pod を増やす話と Node を増やす話、さらにそれを支える requests と headroom の話を分ける必要があります。HPA、VPA、Cluster Autoscaler がそれぞれ何を調整し、どこで限界が来るかを分けて説明できれば、この回のゴールに届きます。
+
 ## このコマンドで確認するのはここ
 
 - `bash scripts/capacity-observe.sh apps`: Pod ごとの current usage、requests / limits、Node 側余力、過大/過小な requests を見る
@@ -60,6 +64,12 @@ Autoscaling、capacity planning、cost の考え方を学ぶ。
 - autoscaling は HPA 単体でなく Pod、Node、予測の全体設計である
 - cost 最適化は requests / limits と scheduling に直結する
 - capacity planning は高負荷イベント前に最も効く
+
+## 学ぶポイントの解説
+
+HPA が増やせるのは Pod 数だけで、Node が足りなければそこで止まります。逆に Node を増やしても requests が大きすぎれば bin packing が悪くなり、コストだけ増えてスケール効率は上がりません。autoscaling を 1 つの機能でなく、Pod、Node、余力設計の組み合わせとして見ることが重要です。
+
+また、capacity planning は節約のためだけではありません。平常時、高負荷時、障害時のどれでも説明できる headroom を持つことで、障害時の連鎖停止を防ぎやすくなります。
 
 ## 詰まったときの確認ポイント
 

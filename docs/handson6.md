@@ -108,6 +108,10 @@ kubectl get endpoints -n apps
 - `kubectl describe deployment ...`: `Replicas`, `Selector`, `Pod Template`, `Conditions`, `Events` を見る
 - `kubectl get endpoints -n apps`: user-service と item-service に実際の Pod IP がぶら下がっているかを見る
 
+## この回だけで押さえる整理
+
+API を Kubernetes で動かすときは、Deployment が Pod の更新と増減を管理し、Service が不安定な Pod 群の前に安定した接続先を作る、と分けて考えることが基本です。user-service と item-service が同じ型で運用できる理由を説明できれば、この回のゴールに届きます。
+
 ## 完了条件
 
 - user-service と item-service の Pod が Running になっている

@@ -36,6 +36,10 @@ RBAC と ServiceAccount で最小権限を設計する。
 3. `bash scripts/rbac-access-check.sh apps app-reader get pods` で権限確認を行う
 4. `必要な権限だけを付ける` と `困ったら広げる` の順番を理解する
 
+## この回だけで押さえる整理
+
+RBAC では `誰が`, `何を`, `どこまでできるか` を分けて考えることが出発点です。人の権限と Pod の権限を混ぜず、最小権限で始めて必要に応じて狭く足す、という順序を説明できればこの回のゴールを満たせます。
+
 ## このコマンドで確認するのはここ
 
 - `bash scripts/rbac-access-check.sh apps app-reader get pods`: `yes` / `no` の判定を見て、app-reader が pods を読めるか確認する

@@ -30,6 +30,10 @@ Stateful HA、replication、DB 運用判断を学ぶ。
 3. `単一 StatefulSet`, `replication 構成`, `managed DB` の違いを比較する
 4. DB migration rollback が難しい理由を説明する
 
+## この回だけで押さえる整理
+
+StatefulSet があることと HA が成立していることは別問題です。この回では、保存、複製、切り替え、復旧責任を分けて考え、single StatefulSet、replication、managed DB の違いを言語化できるようになることがポイントです。
+
 ## このコマンドで確認するのはここ
 
 - `bash scripts/postgres-ha-review.sh`: PostgreSQL が単一 Pod か、replica や failover 機構があるか、backup 前提がどうなっているかを見る
@@ -60,6 +64,12 @@ Stateful HA、replication、DB 運用判断を学ぶ。
 - stateful workload の難しさは `保存` より `切り替え` と `整合性` にある
 - backup、replication、failover は互いに代替ではない
 - 実務では managed DB を選ぶ判断も技術力の一部である
+
+## 学ぶポイントの解説
+
+PVC があると `消えない` 方向には近づきますが、障害時に `切り替わる` ことまでは保証しません。replication は可用性を高めますが、論理破損まで救うわけではないので backup も別に必要です。つまり stateful HA は 1 つの機能で完結せず、複数の仕組みの役割差を理解する必要があります。
+
+ここで managed DB を選ぶ判断も重要です。自前で持てることと、自前で持つべきことは同じではなく、運用責任と障害対応力まで含めて選ぶのが実務的です。
 
 ## 詰まったときの確認ポイント
 

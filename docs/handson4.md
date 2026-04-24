@@ -91,6 +91,10 @@ kubectl describe ingress item-service -n apps
 - `kubectl get ingress -n apps`: `CLASS`, `HOSTS`, `PORTS` を見て Ingress が正しく作成されたか確認する
 - `kubectl describe ingress ...`: `Ingress Class`, `Rules`, `Backend`, `Annotations`, `Events` を見る
 
+## この回だけで押さえる整理
+
+Ingress は `外から中へ入る入口` と `path や host に応じた振り分け` をまとめて担います。この回では、Service を直接公開するのではなく、入口を 1 箇所に寄せて routing を管理する理由を説明できるようになることがポイントです。
+
 ## 完了条件
 
 - ingress-nginx namespace で controller Pod が起動している

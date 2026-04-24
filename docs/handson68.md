@@ -31,6 +31,10 @@ Terraform と基盤 IaC を学ぶ。
 3. GitOps と Terraform の役割差を整理する
 4. state 管理と plan review の重要性を書き出す
 
+## この回だけで押さえる整理
+
+Terraform の本質は apply の手軽さではなく、差分を説明しながら基盤変更を再現できることにあります。この回では、manifest と IaC の責務差、state の危険性、plan review の重要性を 1 本で説明できるようになることがポイントです。
+
 ## 確認するとしたらどこを見るか
 
 - Terraform では plan に何が作成・変更・削除されるか、state が何を真実として持つかを見る
@@ -47,6 +51,14 @@ Terraform と基盤 IaC を学ぶ。
 - cluster の外側を手作業で変更していないか
 - state 管理が安全か
 - plan を review せず apply していないか
+
+## よくある失敗
+
+この回の失敗は、IaC を `コードで apply できること` だけで捉えると起きやすいです。背景には `state と差分 review が Terraform の信頼性を支えている` という理解不足があります。
+
+- plan を読まずに apply する
+- state file を単なる作業ファイルとして雑に扱う
+- GitOps と Terraform の責務を混同する
 
 
 ## 詰まったときの確認ポイント

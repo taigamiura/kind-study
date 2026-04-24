@@ -32,6 +32,12 @@ CRD と Operator の仕組みを学ぶ。
 3. `bash scripts/crd-observe.sh` を実行してクラスタ内の CRD を観察する
 4. `desired state を誰が実現するか` を既存 add-on に当てはめる
 
+## この回だけで押さえる整理
+
+CRD は `Kubernetes に新しい API の型を増やす` 仕組みで、Operator は `その型を見て実際の状態へ近づける controller` です。つまり YAML を apply しただけでは終わらず、裏で reconcile loop が走って初めて desired state が実現されます。
+
+ここで重要なのは、custom resource 自体は `宣言` に過ぎない点です。controller が止まれば、その宣言は置かれていても状態は更新されません。cert-manager、Argo CD、Istio を `Operator 的な仕組み` として見られるようになると、この回の理解が一気に深まります。
+
 ## このコマンドで確認するのはここ
 
 - `bash scripts/crd-observe.sh`: CRD 一覧、custom resource の種類、controller が管理していそうな resource 名を見る
@@ -58,6 +64,16 @@ CRD と Operator の仕組みを学ぶ。
 - finalizer で削除詰まりが起こる意味を理解しない
 
 ## 学ぶポイント
+
+- CRD は型の追加、Operator はその型を実現する自動化であり、役割が違う
+- custom resource は built-in resource より運用依存が強く、controller 停止の影響を受けやすい
+- finalizer や ownerReference を理解すると、削除や従属関係の詰まり方が読める
+
+## 学ぶポイントの解説
+
+Deployment や Service は Kubernetes 本体が意味を知っている built-in resource ですが、custom resource はそうではありません。意味を与えるのは controller 側です。だから CRD を増やすということは、API surface を増やすだけでなく、新しい運用責務を増やすことでもあります。
+
+また、finalizer は削除前に片付けたい外部処理があるときに使われます。そのため controller が止まると削除が詰まることがあります。ここまで理解できると、CRD を `便利そうな YAML` ではなく、実際に運用コストを持つ仕組みとして見られるようになります。
 
 
 ## 詰まったときの確認ポイント

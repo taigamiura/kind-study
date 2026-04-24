@@ -30,6 +30,12 @@ Kubernetes 内部構造と control plane の役割を学ぶ。
 3. Deployment 作成から Pod 実行までの control loop を図にする
 4. `Pod が Pending`, `Service に名前解決できない`, `PVC が bound しない` の原因レイヤを分ける
 
+## この回だけで押さえる整理
+
+`kubectl apply` すると Pod が動く、で止まると内部構造が見えません。実際には、apiserver が desired state を受け取り、controller-manager が不足分を見つけ、scheduler が Node を決め、kubelet がその Node で container を起動します。各コンポーネントは別の責務を持っているため、障害時も `どこで決まる問題か` を分けて考える必要があります。
+
+切り分けの基本は、`作成できない`, `置けない`, `起動できない`, `名前解決できない`, `保存できない` を分けることです。作成できないなら apiserver や admission、置けないなら scheduler、起動できないなら kubelet / runtime、名前解決できないなら DNS、保存できないなら storage の線が濃くなります。
+
 ## このコマンドで確認するのはここ
 
 - `bash scripts/cluster-components-check.sh`: kube-system の主要 Pod が `Running` か、apiserver、controller-manager、scheduler、CoreDNS などが見えているか確認する
@@ -56,6 +62,16 @@ Kubernetes 内部構造と control plane の役割を学ぶ。
 - etcd や apiserver の重要性を見落とす
 
 ## 学ぶポイント
+
+- Kubernetes は 1 つの巨大な仕組みではなく、役割の違う control loop の集合である
+- `apply した` と `Node 上で実行された` の間には、複数の責務境界がある
+- 症状の出方から壊れているレイヤを絞ると、調査が速くなる
+
+## 学ぶポイントの解説
+
+初学者が混乱しやすいのは、すべての問題を `Kubernetes` という 1 つの箱で捉えることです。しかし実際には、scheduler は Node を選ぶだけで、container は起動しません。kubelet は Node 上で Pod を起動しますが、PVC を作るわけではありません。この責務の分離を理解すると、`誰に聞くべき問題か` が見えます。
+
+例えば Pod が Pending のままなら、まず scheduler が置けない理由を見るべきです。逆に Running なのに Service で名前解決できないなら、Deployment より DNS や Service のレイヤを先に疑う方が筋が良いです。ここを言語化できると、障害時の初動がかなり強くなります。
 
 
 ## 詰まったときの確認ポイント

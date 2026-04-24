@@ -29,6 +29,10 @@ canary リリース runbook を通しで学ぶ。
 3. どこで手順を飛ばすと危険かを 3 つ挙げる
 4. 自分の言葉で `この runbook が守っているもの` を説明する
 
+## この回だけで押さえる整理
+
+canary runbook の価値は、apply 手順より `preflight から follow-up までが 1 本につながること` にあります。どこで止めるか、どこで進めるかの gate を説明できれば、この回は実務に使える状態です。
+
 ## 確認するとしたらどこを見るか
 
 - runbook 全体では preflight、observe、decision、follow-up が順番どおりつながっているかを見る

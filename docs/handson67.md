@@ -30,6 +30,10 @@ Managed Kubernetes とクラウド周辺設計を学ぶ。
 3. kind と EKS / GKE / AKS の責務差を整理する
 4. `network`, `identity`, `ingress`, `egress`, `audit` の観点で本番要件を洗い出す
 
+## この回だけで押さえる整理
+
+managed Kubernetes を実務で使うときは、cluster の内側より先に周辺クラウド資源を見ます。この回では、kind では見えなかった VPC、IAM、LB、NAT、DNS、監査境界が本番設計の主要論点になると説明できれば十分です。
+
 ## 確認するとしたらどこを見るか
 
 - managed Kubernetes では cluster 内より先に VPC、IAM、LB、NAT、DNS など周辺資源を見る
@@ -46,6 +50,14 @@ Managed Kubernetes とクラウド周辺設計を学ぶ。
 - cluster の外側にあるセキュリティ境界を理解しているか
 - LB、NAT、WAF、DNS を Kubernetes だけの問題だと思っていないか
 - IAM と ServiceAccount 連携を分けて考えられるか
+
+## よくある失敗
+
+この回の失敗は、managed Kubernetes を `control plane の運用が不要になる仕組み` とだけ捉えると起きやすいです。背景には `周辺ネットワークと権限設計こそ実務の主要論点` という視点の不足があります。
+
+- cluster さえ作れば本番要件の大半を満たせると思う
+- private cluster 化した後の運用経路や監査経路を考えない
+- IAM と Kubernetes RBAC の責務を混同する
 
 
 ## 詰まったときの確認ポイント

@@ -31,6 +31,17 @@ Supply Chain Security と image 信頼性を学ぶ。
 3. `bash scripts/image-inventory.sh apps` を実行して current image を確認する
 4. `誰が build したか`, `何が含まれるか`, `本当にその image か` をどう担保するか整理する
 
+## この回だけで押さえる整理
+
+Supply Chain Security は `脆弱性がない image を作る` だけではありません。少なくとも `誰が作ったか`, `何が入っているか`, `途中で差し替わっていないか` を説明できる必要があります。ここで scan、SBOM、署名、provenance はそれぞれ別の問いに答えます。
+
+- vulnerability scan: 既知脆弱性があるか
+- SBOM: 何の部品が含まれているか
+- signature: その artifact が正しい発行元のものか
+- provenance: どの build pipeline でどう作られたか
+
+この 4 つを同じものだと思うと、`scan したから安全` と誤解しやすくなります。
+
 ## このコマンドで確認するのはここ
 
 - `bash scripts/image-inventory.sh apps`: image 名、tag / digest、どの Deployment がどの image を使っているかを見る
@@ -57,6 +68,16 @@ Supply Chain Security と image 信頼性を学ぶ。
 - registry へ push できる主体が広すぎる
 
 ## 学ぶポイント
+
+- image の安全性は `動くか` より `追跡できるか` と `改ざんされていないか` が重要である
+- scan、SBOM、署名、provenance は互いに代替ではなく補完関係にある
+- mutable tag を避け、digest で固定すると再現性と監査性が上がる
+
+## 学ぶポイントの解説
+
+例えば `latest` タグの image が今朝と夕方で中身が変わっても、タグ名だけでは気づけません。これが mutable tag の危険性です。digest で固定すると、`本当に同じものを出したか` を説明しやすくなります。
+
+また、scan は脆弱性を見つける道具ですが、`その image が本当に自分たちの pipeline で作られたか` は分かりません。そこを担保するのが署名や provenance です。1 つの対策で全部解決するわけではないと理解できることが、この回で最も大切です。
 
 
 ## 詰まったときの確認ポイント

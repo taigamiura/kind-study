@@ -60,6 +60,10 @@ bash scripts/postgres-restore.sh artifacts/postgres-backups/latest.sql
 - `ls -1 artifacts/postgres-backups`: timestamp 付き dump と `latest.sql` があるかを見る
 - `bash scripts/postgres-restore.sh ...`: restore 完了メッセージが出るかを見る
 
+## この回だけで押さえる整理
+
+バックアップ運用では、取得できることと戻せることを分けて考えます。この回では dump の取得、保存先、restore、RPO/RTO、DR の関係を 1 本で説明できるようになることがポイントです。
+
 ## 完了条件
 
 - dump ファイルが artifacts 配下へ保存されている

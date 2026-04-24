@@ -72,6 +72,10 @@ kubectl exec -n apps deploy/sleep -c sleep -- curl -s http://item-service:9898/h
 - `kubectl exec ... user-service`: healthz が成功応答するかを見る
 - `kubectl exec ... item-service`: healthz が成功応答するかを見る
 
+## この回だけで押さえる整理
+
+サービスメッシュの入口では、sidecar が何を増やし、アプリ間通信にどう介入するかを理解することが重要です。アプリ本体のコードを書き換えずに通信面の制御を足せる理由を説明できれば、この回の理解は十分です。
+
 ## 完了条件
 
 - istio-system namespace に control plane Pod が起動している

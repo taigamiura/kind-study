@@ -82,6 +82,10 @@ kubectl describe namespace infra
 - `kubectl describe namespace apps`: `Labels`, `Annotations`, `Resource Quotas`, `Limit Ranges` の有無を見る
 - `kubectl describe namespace infra`: apps と同様に namespace 単位の付与情報を見る
 
+## この回だけで押さえる整理
+
+Namespace 設計では、分けること自体が目的ではなく、責務と影響範囲を分けることが目的です。apps、infra、observability、gitops を分ける理由を `変更頻度`, `権限`, `障害時の見方` の 3 軸で説明できれば十分です。
+
 ## 完了条件
 
 - apps、infra、observability、gitops、ingress-nginx が作成されている

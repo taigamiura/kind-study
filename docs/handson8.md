@@ -102,6 +102,10 @@ kubectl apply -k manifests/base/ridgepole
 - `kubectl delete job ridgepole-apply -n infra`: Completed 済み Job をいったん消して再実行可能にする
 - `kubectl apply -k manifests/base/ridgepole`: Job を作り直して再度 schema apply を試す
 
+## この回だけで押さえる整理
+
+Ridgepole の学習ポイントは、DB スキーマ変更を手作業でなく再現可能な手順として扱うことです。アプリ deploy と schema apply を分け、何を Job で一度だけ走らせるのかを説明できれば、この回の目的は達成です。
+
 ## 完了条件
 
 - ridgepole-apply Job が Completed になっている

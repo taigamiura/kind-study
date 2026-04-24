@@ -29,6 +29,10 @@ Build pipeline と container build engineering を学ぶ。
 3. latest tag を避ける理由を build engineering 観点でも整理する
 4. 環境ごとに build し直さない理由を説明する
 
+## この回だけで押さえる整理
+
+build engineering で大切なのは、image を作ることより `同じ artifact を安全に昇格できること` です。この回では build、scan、sign、promote を 1 本の release pipeline として説明できるようになることを目指します。
+
 ## 確認するとしたらどこを見るか
 
 - build pipeline では cache 効率、artifact の再現性、multi-arch 対応、promotion の境界を見る
@@ -45,6 +49,14 @@ Build pipeline と container build engineering を学ぶ。
 - 本番用 artifact を環境ごとに作り直していないか
 - cache と再現性のバランスを取れているか
 - build 速度だけでなく traceability があるか
+
+## よくある失敗
+
+この回の失敗は、build を `コンテナ image ができる工程` とだけ見ると起きやすいです。背景には `artifact の再現性と traceability が release 品質を支える` という視点の不足があります。
+
+- 環境ごとに別 build してしまう
+- latest tag のまま release artifact を扱う
+- build 速度だけを最適化して追跡性を落とす
 
 
 ## 詰まったときの確認ポイント

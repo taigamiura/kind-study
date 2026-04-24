@@ -93,6 +93,10 @@ kubectl top pods -n apps
 
 ここで `kubectl top` が通って初めて、HPA が CPU 指標を参照できる前提が整ったと考えます。
 
+## この回だけで押さえる整理
+
+HPA では `CPU が高いから増える` という単純化で止まらず、requests、metrics-server、target 値、現在値、条件の関係まで見る必要があります。スケール判断がどの前提で成立するかを説明できれば、この回のゴールに届きます。
+
 ## 完了条件
 
 - metrics-server が動作している

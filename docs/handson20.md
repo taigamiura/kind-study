@@ -61,6 +61,10 @@ kubectl rollout status deployment/user-service -n apps
 - `kubectl get certificate -n apps`: `READY` を見る
 - `kubectl rollout status deployment/user-service -n apps`: rollout が成功で終わるかを見る
 
+## この回だけで押さえる整理
+
+Secret や証明書の更新では、値変更そのものより `どう反映し、どう確認し、どこまで影響を見るか` が重要です。rotation を day-2 運用として扱えるようになることが、この回の目的です。
+
 ## 完了条件
 
 - 証明書の有効期限と Ready 状態を確認できる
